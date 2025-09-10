@@ -31,6 +31,7 @@ import contractPlayerUsersRouter from "./routes/contractPlayerUsers";
 import contractUserActionsRouter from "./routes/contractUserActions";
 import contractVideoActionsRouter from "./routes/contractVideoActions";
 import leaguesRouter from "./routes/leagues";
+import scriptsRouter from "./routes/scripts";
 
 
 // Verify and create necessary directories first
@@ -66,6 +67,7 @@ app.use("/contract-player-users", contractPlayerUsersRouter);
 app.use("/contract-user-actions", contractUserActionsRouter);
 app.use("/contract-video-actions", contractVideoActionsRouter);
 app.use("/leagues", leaguesRouter);
+app.use("/scripts", scriptsRouter);
 
 // Increase payload size for large files
 app.use(express.json({ limit: "6gb" }));

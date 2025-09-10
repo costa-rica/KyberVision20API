@@ -570,7 +570,7 @@ Business Logic Handling:
 The contractVideoActions API now provides robust video-action synchronization management with efficient batch processing for timing
 adjustments, proper TypeScript type safety, and authentication.
 
-## Implemented leagues routes (commit )
+## Implemented leagues routes (ommit 53c9c3a3c81ab92acfee311fd35c1b9c99cd8dfa )
 
 Created Files:
 
@@ -613,3 +613,74 @@ Business Logic Handling:
 
 The leagues API now provides reliable team-league association data retrieval with proper relationship handling, TypeScript type safety, and
 authentication.
+
+## Implemented scripts routes (commit )
+
+Successfully implemented the complete scripts functionality for the TypeScript version. Here's what was accomplished:
+
+### Created Files:
+
+**1. src/routes/scripts.ts**
+Complete live scripting management API with endpoint for:
+
+- `POST /scripts/scripting-live-screen/receive-actions-array` - Processes arrays of actions from live scripting sessions, creates scripts, and manages user favorites
+
+**2. Updated src/app.ts**
+- Added scripts router import and mounting at `/scripts` path
+
+### Key Features Implemented:
+
+**Live Scripting Management:**
+1. **Batch Action Processing** - Handles arrays of actions from live scripting sessions
+2. **Script Creation** - Automatically creates new script records with reference timestamps
+3. **Transaction Safety** - Uses database transactions to ensure data integrity
+4. **User Favorites** - Processes favorite status and creates ContractUserAction records
+5. **Timestamp Reference** - Calculates earliest timestamp as reference point for script synchronization
+6. **Action Sorting** - Sorts actions by timestamp for proper chronological order
+
+### Key TypeScript Fixes:
+
+**Timestamp Type Conversion Issues:**
+- **Problem**: Database expects `Date` objects but TypeScript was receiving string timestamps
+- **Solution**: Convert string timestamps to Date objects for both script and action creation
+```typescript
+// Script creation
+timestampReferenceFirstAction: new Date(earliestTimestamp)
+
+// Action creation
+const actionObj = { 
+  ...elem, 
+  scriptId,
+  timestamp: new Date(elem.timestamp)
+};
+```
+
+**Input Validation and Type Safety:**
+- **Problem**: No validation for incoming action arrays and session data
+- **Solution**: Added comprehensive input validation and TypeScript interfaces
+```typescript
+interface ActionData {
+  timestamp: string;
+  favorite?: boolean;
+  [key: string]: any;
+}
+```
+
+### Key TypeScript Improvements:
+
+1. **Type Safety** - Added proper TypeScript interfaces for action data structures
+2. **Input Validation** - Added comprehensive validation for request data arrays and required fields
+3. **Parameter Conversion** - Convert `sessionId` to number using `Number()`
+4. **Error Handling** - Enhanced error handling with try-catch blocks and detailed error responses
+5. **Modern Imports** - Used ES6 import syntax throughout, including proper sequelize import
+6. **Authentication** - Endpoint protected with JWT authentication middleware
+7. **Enhanced Response** - Added `actionsCount` to response for better client feedback
+
+### Business Logic Handling:
+- **Reference Timestamp Calculation** - Finds earliest timestamp for script synchronization
+- **Chronological Sorting** - Ensures actions are processed in proper time order using `Date.getTime()` for accurate sorting
+- **Transaction Management** - Uses Sequelize transactions to maintain data consistency
+- **Favorite Processing** - Automatically creates user-action associations for favorited actions
+- **Data Integrity** - Validates input data and provides meaningful error messages
+
+The scripts API now provides robust live scripting session management with batch action processing, proper transaction handling, TypeScript type safety, and authentication.
