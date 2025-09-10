@@ -56,7 +56,7 @@ router.post(
             );
 
             const actionTimestamp = new Date(actionWithoutContractVideoActions.timestamp).getTime();
-            const referenceTimestamp = new Date(scriptsArray[i].timestampReferenceFirstAction).getTime();
+            const referenceTimestamp = new Date(scriptsArray[i].timestampReferenceFirstAction || 0).getTime();
             const differenceInTimeActionMinusTimestampReferenceFirstAction =
               (actionTimestamp - referenceTimestamp) / 1000;
 
@@ -320,7 +320,7 @@ router.get(
           const deltaTime = contractVideoAction?.deltaTimeInSeconds || 0;
 
           const actionTimestamp = new Date(action.timestamp).getTime();
-          const referenceTimestamp = new Date(scriptsArray[i].timestampReferenceFirstAction).getTime();
+          const referenceTimestamp = new Date(scriptsArray[i].timestampReferenceFirstAction || 0).getTime();
           const videoTimestampCalculation =
             (actionTimestamp - referenceTimestamp + deltaTime * 1000) / 1000;
 

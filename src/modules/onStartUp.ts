@@ -63,6 +63,8 @@ export async function onStartUpCreateEnvUsers(): Promise<void> {
 
         await User.create({
           username: email.split("@")[0],
+          firstName: "Admin", // Default first name for admin users
+          lastName: "User", // Default last name for admin users
           email,
           password: hashedPassword,
           isAdminForKvManagerWebsite: true, // Set admin flag

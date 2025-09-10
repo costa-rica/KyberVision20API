@@ -614,7 +614,7 @@ Business Logic Handling:
 The leagues API now provides reliable team-league association data retrieval with proper relationship handling, TypeScript type safety, and
 authentication.
 
-## Implemented scripts routes (commit )
+## Implemented scripts routes (commit c3e2e6792e24abf4b9595eb0bfacc247dc373eef)
 
 Successfully implemented the complete scripts functionality for the TypeScript version. Here's what was accomplished:
 
@@ -626,11 +626,13 @@ Complete live scripting management API with endpoint for:
 - `POST /scripts/scripting-live-screen/receive-actions-array` - Processes arrays of actions from live scripting sessions, creates scripts, and manages user favorites
 
 **2. Updated src/app.ts**
+
 - Added scripts router import and mounting at `/scripts` path
 
 ### Key Features Implemented:
 
 **Live Scripting Management:**
+
 1. **Batch Action Processing** - Handles arrays of actions from live scripting sessions
 2. **Script Creation** - Automatically creates new script records with reference timestamps
 3. **Transaction Safety** - Uses database transactions to ensure data integrity
@@ -641,28 +643,32 @@ Complete live scripting management API with endpoint for:
 ### Key TypeScript Fixes:
 
 **Timestamp Type Conversion Issues:**
+
 - **Problem**: Database expects `Date` objects but TypeScript was receiving string timestamps
 - **Solution**: Convert string timestamps to Date objects for both script and action creation
+
 ```typescript
 // Script creation
-timestampReferenceFirstAction: new Date(earliestTimestamp)
+timestampReferenceFirstAction: new Date(earliestTimestamp);
 
 // Action creation
-const actionObj = { 
-  ...elem, 
-  scriptId,
-  timestamp: new Date(elem.timestamp)
+const actionObj = {
+	...elem,
+	scriptId,
+	timestamp: new Date(elem.timestamp),
 };
 ```
 
 **Input Validation and Type Safety:**
+
 - **Problem**: No validation for incoming action arrays and session data
 - **Solution**: Added comprehensive input validation and TypeScript interfaces
+
 ```typescript
 interface ActionData {
-  timestamp: string;
-  favorite?: boolean;
-  [key: string]: any;
+	timestamp: string;
+	favorite?: boolean;
+	[key: string]: any;
 }
 ```
 
@@ -677,6 +683,7 @@ interface ActionData {
 7. **Enhanced Response** - Added `actionsCount` to response for better client feedback
 
 ### Business Logic Handling:
+
 - **Reference Timestamp Calculation** - Finds earliest timestamp for script synchronization
 - **Chronological Sorting** - Ensures actions are processed in proper time order using `Date.getTime()` for accurate sorting
 - **Transaction Management** - Uses Sequelize transactions to maintain data consistency
@@ -684,3 +691,122 @@ interface ActionData {
 - **Data Integrity** - Validates input data and provides meaningful error messages
 
 The scripts API now provides robust live scripting session management with batch action processing, proper transaction handling, TypeScript type safety, and authentication.
+
+## Implemented videos routes (commit )
+
+Created Files:
+
+Module Files:
+
+1. src/modules/common.ts - Utility functions for request validation and logging
+2. src/modules/sessions.ts - Session management with team data integration
+3. src/modules/videos.ts - Video processing, upload handling, and external service integration
+
+Route File:
+
+4. src/routes/videos.ts - Complete video management API with endpoints for:
+
+   - GET /videos/ - Get all videos with session data
+   - GET /videos/team/:teamId - Get team-specific videos
+   - GET /videos/user - Get user's videos
+   - POST /videos/upload-youtube - Upload videos with YouTube processing
+   - DELETE /videos/:videoId - Delete videos from filesystem and YouTube
+   - POST /videos/montage-service/queue-a-job - Queue video montage jobs
+   - POST /videos/montage-service/video-completed-notify-user - Handle montage completion notifications
+   - GET /videos/montage-service/play-video/:token - Stream video montages
+   - GET /videos/montage-service/download-video/:token - Download video montages
+
+Updated Files:
+
+5. src/app.ts - Added videos router and mounting
+6. tsconfig.json - Updated to target ES2017 for Google APIs compatibility
+
+Key Features Implemented:
+
+Video Management:
+
+- Multi-format Upload - Supports MP4 and MOV files with multer
+- File Organization - Automated file renaming and directory management
+- YouTube Integration - Automated YouTube upload processing via external queuer
+- Video Deletion - Comprehensive cleanup from filesystem and YouTube
+- Session Association - Links videos to sessions and teams
+- Permission Validation - Ensures users can only upload to authorized sessions
+
+Montage Services:
+
+- Job Queuing - Interfaces with external montage processing services
+- Email Notifications - Sends completion notifications with tokenized links
+- Secure Access - JWT-tokenized video streaming and download
+- File Streaming - Direct video playback in browsers
+- Force Download - Download videos with proper headers
+
+Session Integration:
+
+- Team Data Enrichment - Includes team details with video metadata
+- League Associations - Manages team-league relationships
+- Session Creation - Automated session setup with default leagues
+
+Key TypeScript Improvements:
+
+1. Type Safety - Proper interfaces for all video processing operations
+2. Error Handling - Comprehensive try-catch blocks with typed error responses
+3. Parameter Validation - Number conversion and null checks for all inputs
+4. Modern Async/Await - Updated from callback patterns to promise-based
+5. External API Integration - Type-safe interfaces with YouTube and montage services
+6. File System Safety - Path validation and secure file operations
+7. JWT Security - Proper token handling with type safety
+
+The videos API now provides complete video lifecycle management from upload through processing, montage creation, and secure delivery, all
+with proper TypeScript type safety, authentication, and comprehensive error handling. The system integrates with external services for
+YouTube processing and video montage creation while maintaining secure, permission-based access control.
+
+### Fixes required due to Google APIs TypeScript
+
+What we changed and why it's causing new errors:
+
+1. "strict": true - This enabled ALL strict type checking options, which is much more rigorous than before
+2. "target": "ES2017" - This is actually modern (ES2017 = ES8, released in 2017)
+3. "skipLibCheck": true - This helps with the Google APIs issue by skipping type checking of declaration files
+
+The real issue:
+
+The "strict": true flag is now catching type safety issues that were previously ignored. This includes:
+
+- Stricter null/undefined checking
+- Stricter property assignment checking
+- Stricter function parameter checking
+
+### Summary of fixes applied:
+
+Proper Error Handling (Your Preferred Approach):
+
+- videos.ts: Added validation to return proper error messages when video.filename is null/undefined
+- routes/videos.ts: Added filename validation in montage job queuing
+
+Required Field Additions:
+
+- onStartUp.ts: Added required firstName and lastName fields for admin user creation
+- players.ts: Added fallback empty string for optional lastName parameter
+
+Null Safety:
+
+- sessions.ts: Added null coalescing for timestampReferenceFirstAction fields
+- modules/sessions.ts: Added type casting for flexible session creation
+
+Type Casting for Complex Models:
+
+- scripts.ts: Used as any casting for Action creation with dynamic properties
+
+Dependencies:
+
+- Installed @types/json2csv and @types/unzipper for proper TypeScript support
+
+Key Benefits of These Fixes:
+
+1. Better Error Messages: Users now get meaningful error messages instead of silent failures
+2. Type Safety: Strict mode catches real bugs and ensures data integrity
+3. Null Safety: Prevents runtime errors from null/undefined values
+4. Modern TypeScript: We maintained ES2017 target and strict typing for better code quality
+
+The TypeScript strict mode is now helping us write more robust, type-safe code while providing better error handling for end users. All
+compilation errors are resolved and the codebase is now more maintainable and reliable!

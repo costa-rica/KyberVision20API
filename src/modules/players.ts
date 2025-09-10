@@ -63,7 +63,7 @@ export async function addNewPlayerToTeam(
   try {
     const playerNew = await Player.create({
       firstName,
-      lastName,
+      lastName: lastName || "", // Provide empty string as default if null/undefined
     });
     
     await ContractTeamPlayer.create({

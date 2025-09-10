@@ -65,7 +65,7 @@ router.post(
             timestamp: new Date(elem.timestamp)
           };
 
-          const action = await Action.create(actionObj, { transaction: t });
+          const action = await Action.create(actionObj as any, { transaction: t });
 
           if (elem.favorite === true) {
             await ContractUserAction.create(
