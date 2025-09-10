@@ -400,7 +400,7 @@ if (!team) {
 
 The contractTeamUsers API now provides complete team membership management functionality including user invitations, role management, join token systems, and squad member administration, all with proper TypeScript type safety and authentication.
 
-## Implemented players routes (commit )
+## Implemented players routes (commit 88c994b7bbfcddd3cb1a7ed82997bd15d1838616 )
 
 Created Files:
 
@@ -439,3 +439,45 @@ Database Relationship Handling:
 
 The players API now provides comprehensive player data retrieval and profile picture serving functionality with proper TypeScript type safety
 and authentication.
+
+## Implemented contractPlayerUsers routes (commit )
+
+Created Files:
+
+src/routes/contractPlayerUsers.ts - Complete contract player user management API with endpoints for:
+
+- POST /contract-player-users/link-user-to-player - Links registered users to player records with intelligent conflict resolution
+- DELETE /contract-player-users/:playerId - Removes the link between a player and user
+
+Updated src/app.ts - Added contractPlayerUsers router import and mounting at /contract-player-users path
+
+Key Features Implemented:
+
+User-Player Linking Logic:
+
+1. Conflict Resolution - Handles scenarios where:
+
+
+    - Player already has a linked user (updates with new user)
+    - User already linked to another player (updates with new player)
+    - No existing links (creates new contract)
+
+2. Link Removal - Cleanly removes player-user associations
+
+Key TypeScript Improvements:
+
+1. Type Safety: Added proper TypeScript types for Request/Response objects
+2. Parameter Conversion: Convert playerId and userId from strings to numbers using Number()
+3. Error Handling: Enhanced error handling with try-catch blocks and typed error objects
+4. Modern Imports: Used ES6 import syntax throughout
+5. Naming Correction: Fixed from singular contractPlayerUser to plural contractPlayerUsers for consistency
+6. Authentication: All endpoints protected with JWT authentication middleware
+
+Business Logic Handling:
+
+- Smart Linking: Intelligently handles three scenarios for user-player linking
+- Data Integrity: Ensures one-to-one relationship between users and players
+- Clean Deletion: Properly removes contracts without affecting player or user records
+
+The contractPlayerUsers API now provides robust user-player association management with proper conflict resolution, type safety, and
+authentication.
