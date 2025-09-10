@@ -23,6 +23,7 @@ import {
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import adminDbRouter from "./routes/adminDb";
+import teamsRouter from "./routes/teams";
 
 
 // Verify and create necessary directories first
@@ -50,6 +51,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/admin-db", adminDbRouter);
+app.use("/teams", teamsRouter);
 
 // Increase payload size for large files
 app.use(express.json({ limit: "6gb" }));

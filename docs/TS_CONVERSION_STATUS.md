@@ -133,3 +133,55 @@ management, and row-level operations, all with JWT authentication protection.
 ### Plus a fix on src/modules/adminDb.ts
 
 - `const processCSVFiles = async (files: string[]): Promise<number> => {`
+
+## Implemented teams routes
+
+Successfully implemented the complete teams functionality for the TypeScript version. Here's what was accomplished:
+
+### Created Files:
+
+**1. src/modules/players.ts**
+Contains utility functions for player management:
+- `createUniquePlayerObjArray()` - Extracts unique player objects from action data
+- `createUniquePlayerNamesArray()` - Extracts unique player names from action data  
+- `addNewPlayerToTeam()` - Creates a new player and associates them with a team
+- Added proper TypeScript interfaces and error handling
+
+**2. src/routes/teams.ts**
+Complete teams management API with endpoints for:
+- `GET /teams` - Fetch all teams
+- `POST /teams/create` - Create new team with players and league association
+- `POST /teams/update-visibility` - Update team visibility setting
+- `POST /teams/add-player` - Add individual player to existing team
+- `DELETE /teams/player` - Remove player from team
+
+**3. Updated src/app.ts**
+- Added teams router import and mounting at `/teams` path
+
+### Key Features Implemented:
+
+**Team Creation Process:**
+1. **Create Team** - Creates new team record with name and description (playersArray excluded from Team.create())
+2. **League Association** - Links team to league (defaults to General League if none specified)
+3. **User Permissions** - Automatically grants creator admin and super user privileges
+4. **Player Creation** - Processes players array and creates player records with team associations
+5. **Response Enhancement** - Returns teamNew object with playersArray included for client reference
+
+**Player Management:**
+- **Player Creation** - Creates player records with optional shirt numbers, positions
+- **Team Association** - Links players to teams via ContractTeamPlayer relationship
+- **Player Removal** - Removes player-team associations while preserving player records
+- **Return Enhancement** - Returns player object with teamId included (not stored in Player table)
+
+### Key Fixes:
+- **Set Iteration** - Changed `[...new Set()]` to `Array.from(new Set())` for ES5 compatibility
+- **Schema Compliance** - Removed `playersArray` from Team.create() and `teamId` from Player.create()
+- **Response Objects** - Enhanced return objects to include client-needed properties without affecting database schema
+
+### TypeScript Improvements:
+- **Type Safety** - Proper interfaces for Player objects and request/response types
+- **Error Handling** - Enhanced error handling with null checking
+- **Optional Parameters** - Proper optional parameter handling for player creation
+- **Authentication** - All endpoints protected with JWT authentication middleware
+
+The teams API now provides complete team and player management functionality with proper TypeScript type safety and authentication.
