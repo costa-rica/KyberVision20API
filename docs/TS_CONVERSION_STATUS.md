@@ -524,7 +524,7 @@ Business Logic Handling:
 The contractUserActions API now provides robust user favorites management with efficient batch processing, proper TypeScript type safety, and
 authentication.
 
-## Implemented contractVideoActions routes (commit )
+## Implemented contractVideoActions routes (commit dcdb3151cb2a0c845f54f34596fdc996553a6c11 )
 
 Created Files:
 
@@ -549,10 +549,9 @@ Key TypeScript Improvements:
 1. Type Safety: Added proper TypeScript types for Request/Response objects
 2. Parameter Conversion: Convert all parameters to numbers using Number() for type consistency:
 
-
-    - scriptId → scriptIdNumber
-    - videoId → videoIdNumber
-    - newDeltaTimeInSeconds → deltaTimeNumber
+   - scriptId → scriptIdNumber
+   - videoId → videoIdNumber
+   - newDeltaTimeInSeconds → deltaTimeNumber
 
 3. Error Handling: Enhanced error handling with try-catch blocks and detailed error responses
 4. Validation: Added checks for empty results with appropriate error messages
@@ -570,3 +569,47 @@ Business Logic Handling:
 
 The contractVideoActions API now provides robust video-action synchronization management with efficient batch processing for timing
 adjustments, proper TypeScript type safety, and authentication.
+
+## Implemented leagues routes (commit )
+
+Created Files:
+
+src/routes/leagues.ts - Complete league management API with endpoint for:
+
+- GET /leagues/team/:teamId - Fetches all leagues associated with a specific team, including contract relationship data
+
+Updated src/app.ts - Added leagues router import and mounting at /leagues path
+
+Key Features Implemented:
+
+League Data Retrieval:
+
+1. Team-League Association - Retrieves all leagues linked to a specific team through ContractLeagueTeam relationships
+2. Contract Information - Includes contract IDs for client reference
+3. Sorted Results - Returns leagues sorted by league ID for consistent ordering
+4. Relationship Navigation - Navigates from team → contract → league data structures
+
+Key TypeScript Improvements:
+
+1. Type Safety: Added proper TypeScript interface for league data structure:
+   interface LeagueData {
+   id: number;
+   name: string;
+   contractLeagueTeamId: number;
+   }
+2. Parameter Conversion: Convert teamId from string to number using Number()
+3. Error Handling: Enhanced error handling with try-catch blocks and detailed error responses
+4. Null Safety: Added null check for league lookup with descriptive error message
+5. Modern Imports: Used ES6 import syntax throughout
+6. Authentication: Endpoint protected with JWT authentication middleware
+7. Consistent Error Messages: Improved error message from French to English for consistency
+
+Business Logic Handling:
+
+- Relationship Resolution: Efficiently resolves ContractLeagueTeam → League relationships
+- Data Integrity: Validates that all referenced leagues exist in the database
+- Performance Optimization: Uses Promise.all for concurrent league lookups
+- Sorted Output: Ensures consistent ordering for client consumption
+
+The leagues API now provides reliable team-league association data retrieval with proper relationship handling, TypeScript type safety, and
+authentication.
