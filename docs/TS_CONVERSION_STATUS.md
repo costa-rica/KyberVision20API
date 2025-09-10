@@ -69,7 +69,9 @@ safety.
 - middleware to handle x-www-form-urlencoded requests and other important configuration from
   the original app.js
 
-## Implemented adminDb.ts
+## Implemented adminDb.ts (commit 87d3ac270e84bacc0df7df289f3b5ed39912e335)
+
+- ** this commit includes everything before becuase we deleted and restarted the .git / repo **
 
 successfully implemented the complete adminDb functionality for the TypeScript version. Here's what I've accomplished:
 
@@ -134,7 +136,7 @@ management, and row-level operations, all with JWT authentication protection.
 
 - `const processCSVFiles = async (files: string[]): Promise<number> => {`
 
-## Implemented teams routes
+## Implemented teams routes (commit 3731dc1caffbd6ae31c3cf56d1672e2144e9c041)
 
 Successfully implemented the complete teams functionality for the TypeScript version. Here's what was accomplished:
 
@@ -142,13 +144,15 @@ Successfully implemented the complete teams functionality for the TypeScript ver
 
 **1. src/modules/players.ts**
 Contains utility functions for player management:
+
 - `createUniquePlayerObjArray()` - Extracts unique player objects from action data
-- `createUniquePlayerNamesArray()` - Extracts unique player names from action data  
+- `createUniquePlayerNamesArray()` - Extracts unique player names from action data
 - `addNewPlayerToTeam()` - Creates a new player and associates them with a team
 - Added proper TypeScript interfaces and error handling
 
 **2. src/routes/teams.ts**
 Complete teams management API with endpoints for:
+
 - `GET /teams` - Fetch all teams
 - `POST /teams/create` - Create new team with players and league association
 - `POST /teams/update-visibility` - Update team visibility setting
@@ -156,11 +160,13 @@ Complete teams management API with endpoints for:
 - `DELETE /teams/player` - Remove player from team
 
 **3. Updated src/app.ts**
+
 - Added teams router import and mounting at `/teams` path
 
 ### Key Features Implemented:
 
 **Team Creation Process:**
+
 1. **Create Team** - Creates new team record with name and description (playersArray excluded from Team.create())
 2. **League Association** - Links team to league (defaults to General League if none specified)
 3. **User Permissions** - Automatically grants creator admin and super user privileges
@@ -168,20 +174,98 @@ Complete teams management API with endpoints for:
 5. **Response Enhancement** - Returns teamNew object with playersArray included for client reference
 
 **Player Management:**
+
 - **Player Creation** - Creates player records with optional shirt numbers, positions
 - **Team Association** - Links players to teams via ContractTeamPlayer relationship
 - **Player Removal** - Removes player-team associations while preserving player records
 - **Return Enhancement** - Returns player object with teamId included (not stored in Player table)
 
 ### Key Fixes:
+
 - **Set Iteration** - Changed `[...new Set()]` to `Array.from(new Set())` for ES5 compatibility
 - **Schema Compliance** - Removed `playersArray` from Team.create() and `teamId` from Player.create()
 - **Response Objects** - Enhanced return objects to include client-needed properties without affecting database schema
 
 ### TypeScript Improvements:
+
 - **Type Safety** - Proper interfaces for Player objects and request/response types
 - **Error Handling** - Enhanced error handling with null checking
 - **Optional Parameters** - Proper optional parameter handling for player creation
 - **Authentication** - All endpoints protected with JWT authentication middleware
 
 The teams API now provides complete team and player management functionality with proper TypeScript type safety and authentication.
+
+## Implemented sessions routes
+
+Successfully implemented the complete sessions functionality for the TypeScript version. Here's what was accomplished:
+
+### Created Files:
+
+**1. src/modules/contractVideoAction.ts**
+Contains utility function for video timestamp calculations:
+- `createEstimatedTimestampStartOfVideo()` - Calculates the estimated start time of a video based on action timestamps and delta time
+- Added proper TypeScript interfaces for Action objects
+- Enhanced null safety with optional chaining
+
+**2. src/routes/sessions.ts**
+Complete sessions management API with endpoints for:
+- `POST /sessions/review-selection-screen/get-actions` - Complex endpoint that processes actions from multiple scripts, calculates video timestamps, checks user favorites, and merges/sorts results
+- `GET /sessions/:teamId` - Fetches all sessions for a team with formatted date strings
+- `POST /sessions/create` - Creates new session with league association
+- `GET /sessions/scripting-sync-video/:sessionId/actions` - Fetches actions for mobile scripting sync screen
+- `GET /sessions/scripting-sync-video-screen/get-actions-for-syncing/:sessionId` - Advanced endpoint for syncing actions with video timestamps
+
+**3. Updated src/app.ts**
+- Added sessions router import and mounting at `/sessions` path
+
+### Key Features Implemented:
+
+**Session Management:**
+1. **Session Creation** - Creates new sessions linked to teams and leagues
+2. **Session Retrieval** - Fetches sessions with formatted French date strings (e.g., "15 mar 20h00")
+3. **Default League Handling** - Uses default league when none specified
+
+**Action Processing:**
+1. **Multi-Script Processing** - Handles actions from multiple scripts within a session
+2. **Video Timestamp Calculations** - Calculates precise video timestamps using reference times and delta values
+3. **User Favorites** - Checks and includes user favorite status for actions
+4. **Action Sorting** - Sorts actions by video timestamp for proper playback order
+5. **Index Assignment** - Assigns review indices for UI navigation
+
+**Advanced Video Synchronization:**
+- **Delta Time Processing** - Handles time synchronization between scripts and videos
+- **Timestamp Calculations** - Complex calculations for accurate video-to-action mapping
+- **Multi-Video Support** - Supports actions linked to different videos via ContractVideoAction relationships
+
+### Key TypeScript Fixes:
+
+**ContractVideoActions Association Handling:**
+- **Problem**: TypeScript didn't recognize `ContractVideoActions` as a property since it's a Sequelize association
+- **Solution**: Cast `action.toJSON()` to `any` type to access included association data
+```typescript
+const actionJSON = action.toJSON() as any;
+const { ContractVideoActions, ...actionWithoutContractVideoActions } = actionJSON;
+```
+
+**Timestamp Arithmetic Type Issues:**
+- **Problem**: TypeScript couldn't perform arithmetic operations on timestamp fields
+- **Solution**: Convert timestamps to numbers using `new Date().getTime()` before performing calculations
+```typescript
+const actionTimestamp = new Date(actionWithoutContractVideoActions.timestamp).getTime();
+const referenceTimestamp = new Date(scriptsArray[i].timestampReferenceFirstAction).getTime();
+const differenceInTime = (actionTimestamp - referenceTimestamp) / 1000;
+```
+
+### Database Relationship Handling:
+- **Multiple ContractVideoActions**: Properly handles the fact that each Action can have multiple corresponding rows in the ContractVideoActions table
+- **Association Filtering**: Finds the correct ContractVideoAction for a specific video using `ContractVideoActions.find()`
+- **Safe Array Access**: Uses optional chaining and fallback values for robust data handling
+
+### TypeScript Improvements:
+- **Type Safety** - Proper interfaces for complex nested objects and API responses
+- **Error Handling** - Enhanced error handling with typed error objects
+- **Optional Chaining** - Safe access to potentially undefined nested properties
+- **Authentication** - All endpoints protected with JWT authentication middleware
+- **Null Safety** - Proper null checking for database queries and calculations
+
+The sessions API now provides comprehensive session and action management functionality for sports video analysis, with proper TypeScript type safety and authentication.
