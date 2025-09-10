@@ -692,7 +692,7 @@ interface ActionData {
 
 The scripts API now provides robust live scripting session management with batch action processing, proper transaction handling, TypeScript type safety, and authentication.
 
-## Implemented videos routes (commit )
+## Implemented videos routes (commit b03a7baf904d9031543e6b6ecb78890b5d737f18 )
 
 Created Files:
 
