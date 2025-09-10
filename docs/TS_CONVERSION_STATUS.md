@@ -195,7 +195,7 @@ Complete teams management API with endpoints for:
 
 The teams API now provides complete team and player management functionality with proper TypeScript type safety and authentication.
 
-## Implemented sessions routes
+## Implemented sessions routes (commit 757a2dc0e5852d15de7190ed640535b0834b649d)
 
 Successfully implemented the complete sessions functionality for the TypeScript version. Here's what was accomplished:
 
@@ -203,12 +203,14 @@ Successfully implemented the complete sessions functionality for the TypeScript 
 
 **1. src/modules/contractVideoAction.ts**
 Contains utility function for video timestamp calculations:
+
 - `createEstimatedTimestampStartOfVideo()` - Calculates the estimated start time of a video based on action timestamps and delta time
 - Added proper TypeScript interfaces for Action objects
 - Enhanced null safety with optional chaining
 
 **2. src/routes/sessions.ts**
 Complete sessions management API with endpoints for:
+
 - `POST /sessions/review-selection-screen/get-actions` - Complex endpoint that processes actions from multiple scripts, calculates video timestamps, checks user favorites, and merges/sorts results
 - `GET /sessions/:teamId` - Fetches all sessions for a team with formatted date strings
 - `POST /sessions/create` - Creates new session with league association
@@ -216,16 +218,19 @@ Complete sessions management API with endpoints for:
 - `GET /sessions/scripting-sync-video-screen/get-actions-for-syncing/:sessionId` - Advanced endpoint for syncing actions with video timestamps
 
 **3. Updated src/app.ts**
+
 - Added sessions router import and mounting at `/sessions` path
 
 ### Key Features Implemented:
 
 **Session Management:**
+
 1. **Session Creation** - Creates new sessions linked to teams and leagues
 2. **Session Retrieval** - Fetches sessions with formatted French date strings (e.g., "15 mar 20h00")
 3. **Default League Handling** - Uses default league when none specified
 
 **Action Processing:**
+
 1. **Multi-Script Processing** - Handles actions from multiple scripts within a session
 2. **Video Timestamp Calculations** - Calculates precise video timestamps using reference times and delta values
 3. **User Favorites** - Checks and includes user favorite status for actions
@@ -233,6 +238,7 @@ Complete sessions management API with endpoints for:
 5. **Index Assignment** - Assigns review indices for UI navigation
 
 **Advanced Video Synchronization:**
+
 - **Delta Time Processing** - Handles time synchronization between scripts and videos
 - **Timestamp Calculations** - Complex calculations for accurate video-to-action mapping
 - **Multi-Video Support** - Supports actions linked to different videos via ContractVideoAction relationships
@@ -240,28 +246,39 @@ Complete sessions management API with endpoints for:
 ### Key TypeScript Fixes:
 
 **ContractVideoActions Association Handling:**
+
 - **Problem**: TypeScript didn't recognize `ContractVideoActions` as a property since it's a Sequelize association
 - **Solution**: Cast `action.toJSON()` to `any` type to access included association data
+
 ```typescript
 const actionJSON = action.toJSON() as any;
-const { ContractVideoActions, ...actionWithoutContractVideoActions } = actionJSON;
+const { ContractVideoActions, ...actionWithoutContractVideoActions } =
+	actionJSON;
 ```
 
 **Timestamp Arithmetic Type Issues:**
+
 - **Problem**: TypeScript couldn't perform arithmetic operations on timestamp fields
 - **Solution**: Convert timestamps to numbers using `new Date().getTime()` before performing calculations
+
 ```typescript
-const actionTimestamp = new Date(actionWithoutContractVideoActions.timestamp).getTime();
-const referenceTimestamp = new Date(scriptsArray[i].timestampReferenceFirstAction).getTime();
+const actionTimestamp = new Date(
+	actionWithoutContractVideoActions.timestamp
+).getTime();
+const referenceTimestamp = new Date(
+	scriptsArray[i].timestampReferenceFirstAction
+).getTime();
 const differenceInTime = (actionTimestamp - referenceTimestamp) / 1000;
 ```
 
 ### Database Relationship Handling:
+
 - **Multiple ContractVideoActions**: Properly handles the fact that each Action can have multiple corresponding rows in the ContractVideoActions table
 - **Association Filtering**: Finds the correct ContractVideoAction for a specific video using `ContractVideoActions.find()`
 - **Safe Array Access**: Uses optional chaining and fallback values for robust data handling
 
 ### TypeScript Improvements:
+
 - **Type Safety** - Proper interfaces for complex nested objects and API responses
 - **Error Handling** - Enhanced error handling with typed error objects
 - **Optional Chaining** - Safe access to potentially undefined nested properties
@@ -269,3 +286,100 @@ const differenceInTime = (actionTimestamp - referenceTimestamp) / 1000;
 - **Null Safety** - Proper null checking for database queries and calculations
 
 The sessions API now provides comprehensive session and action management functionality for sports video analysis, with proper TypeScript type safety and authentication.
+
+## Implemented contractTeamUsers routes
+
+Successfully implemented the complete contractTeamUsers functionality for the TypeScript version. Here's what was accomplished:
+
+### Created Files:
+
+**1. src/routes/contractTeamUsers.ts**
+Complete team membership management API with endpoints for:
+
+- `GET /contract-team-users` - Fetches user's team memberships with join tokens
+- `POST /contract-team-users/create/:teamId` - Creates or updates team user contracts  
+- `GET /contract-team-users/:teamId` - Fetches squad members for a team with player flags
+- `POST /contract-team-users/add-squad-member` - Adds users to teams or sends invitations
+- `GET /contract-team-users/create-join-token/:teamId` - Creates join tokens (not currently used)
+- `GET /contract-team-users/join/:joinToken` - Allows users to join teams via tokens
+- `POST /contract-team-users/toggle-role` - Toggles user roles (Coach, Admin, Member)
+- `DELETE /contract-team-users/` - Removes users from teams
+
+**2. Updated src/app.ts**
+- Added contractTeamUsers router import and mounting at `/contract-team-users` path
+
+### Key Features Implemented:
+
+**Team Membership Management:**
+1. **User Team Access** - Fetches all teams a user belongs to with join tokens
+2. **Contract Creation** - Creates or updates team user contracts with role permissions
+3. **Squad Management** - Manages team squad members with player status flags
+4. **Email Invitations** - Handles pending invitations for non-registered users
+5. **Join Token System** - Creates temporary tokens for team joining
+6. **Role Management** - Toggles between Coach, Admin, and Member roles
+7. **User Removal** - Removes users from team contracts
+
+**Player Status Integration:**
+- **Player Flag Detection** - Determines if squad members are also players
+- **Cross-Reference Checks** - Validates player status across ContractTeamPlayer and ContractPlayerUser tables
+- **Enhanced Squad Data** - Returns comprehensive squad member information with player associations
+
+### Key TypeScript Fixes:
+
+**Sequelize Association Access Issues:**
+- **Problem**: TypeScript couldn't access Team and User associations directly from ContractTeamUser instances
+- **Solution**: Cast `toJSON()` result to `any` type to access included association data
+```typescript
+const ctuJSON = ctu.toJSON() as any;
+const { Team, ...ctuData } = ctuJSON;
+```
+
+**Include Structure Type Errors:**
+- **Problem**: TypeScript required array format for Sequelize include with nested associations
+- **Solution**: Wrap include objects in arrays for proper typing
+```typescript
+include: [
+  {
+    model: User,
+    attributes: ["id", "username", "email"],
+    include: [
+      {
+        model: ContractPlayerUser,
+      }
+    ],
+  }
+]
+```
+
+**Parameter Type Conversions:**
+- **Problem**: Route parameters come as strings but database expects numbers for teamId
+- **Solution**: Convert string parameters to numbers consistently
+```typescript
+const teamId = Number(req.params.teamId);
+```
+
+**Null Safety for Associations:**
+- **Problem**: Team associations could be null causing runtime errors
+- **Solution**: Added null checks with proper error handling and filtering
+```typescript
+if (!team) {
+  console.log("Warning: Team association not found for ContractTeamUser", ctu.id);
+  return null;
+}
+```
+
+### Database Relationship Handling:
+- **Complex Joins** - Handles multiple table relationships between Users, Teams, Players, and Contracts
+- **Player Status Logic** - Cross-references ContractTeamPlayer and ContractPlayerUser tables for accurate player flags
+- **Invitation System** - Manages PendingInvitations table for non-registered user invitations
+- **JWT Token Integration** - Creates and verifies join tokens with team-specific data
+
+### TypeScript Improvements:
+- **Type Safety** - Proper TypeScript types for all request/response objects and database operations
+- **Non-null Assertions** - Used `process.env.JWT_SECRET!` for environment variables
+- **Modern Imports** - ES6 import syntax throughout
+- **Error Handling** - Enhanced error handling with typed error objects and logging
+- **Authentication** - All endpoints protected with JWT authentication middleware
+- **Naming Correction** - Fixed from singular `contractTeamUser` to plural `contractTeamUsers` for consistency
+
+The contractTeamUsers API now provides complete team membership management functionality including user invitations, role management, join token systems, and squad member administration, all with proper TypeScript type safety and authentication.
