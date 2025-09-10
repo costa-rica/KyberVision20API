@@ -1,14 +1,6 @@
 const express = require("express");
 var router = express.Router();
-const {
-	Action,
-	Script,
-	// ContractScriptVideo,
-	ContractVideoAction,
-	Session,
-	ContractLeagueTeam,
-	ContractUserAction,
-} = require("kybervision18db");
+const { ContractUserAction } = require("kybervision18db");
 const { authenticateToken } = require("../modules/userAuthentication");
 
 // POST /contract-user-actions/update-user-favorites
