@@ -481,7 +481,7 @@ Business Logic Handling:
 The contractPlayerUsers API now provides robust user-player association management with proper conflict resolution, type safety, and
 authentication.
 
-## Implemented contractUserActions routes (commit )
+## Implemented contractUserActions routes (commit d36d70bfc435422514410fd1f5981dd3d868d37f )
 
 Created Files:
 
@@ -505,9 +505,8 @@ Key TypeScript Improvements:
 
 1. Type Safety: Added proper TypeScript interfaces for request data structures:
 
-
-    - ActionFavoriteData - Interface for incoming action data
-    - ActionFavoriteStatus - Interface for processed favorite status data
+   - ActionFavoriteData - Interface for incoming action data
+   - ActionFavoriteStatus - Interface for processed favorite status data
 
 2. Parameter Conversion: Convert sessionId from potential string to number using Number()
 3. Error Handling: Enhanced error handling with try-catch blocks and detailed error responses
@@ -524,3 +523,50 @@ Business Logic Handling:
 
 The contractUserActions API now provides robust user favorites management with efficient batch processing, proper TypeScript type safety, and
 authentication.
+
+## Implemented contractVideoActions routes (commit )
+
+Created Files:
+
+src/routes/contractVideoActions.ts - Complete video-action synchronization management API with endpoint for:
+
+- POST /contract-video-actions/scripting-sync-video-screen/update-delta-time-all-actions-in-script - Updates delta time synchronization for
+  all actions in a script relative to a specific video
+
+Updated src/app.ts - Added contractVideoActions router import and mounting at /contract-video-actions path
+
+Key Features Implemented:
+
+Video Synchronization Management:
+
+1. Batch Delta Time Updates - Updates synchronization timing for all actions in a script at once
+2. Script-Video Linking - Manages the relationship between script actions and specific videos
+3. Timestamp Synchronization - Adjusts timing offsets to align scripted actions with video playback
+4. Bulk Operations - Efficiently processes multiple ContractVideoAction records in a single operation
+
+Key TypeScript Improvements:
+
+1. Type Safety: Added proper TypeScript types for Request/Response objects
+2. Parameter Conversion: Convert all parameters to numbers using Number() for type consistency:
+
+
+    - scriptId → scriptIdNumber
+    - videoId → videoIdNumber
+    - newDeltaTimeInSeconds → deltaTimeNumber
+
+3. Error Handling: Enhanced error handling with try-catch blocks and detailed error responses
+4. Validation: Added checks for empty results with appropriate error messages
+5. Modern Imports: Used ES6 import syntax throughout
+6. Authentication: Endpoint protected with JWT authentication middleware
+7. Enhanced Response: Added updatedCount to response for better client feedback
+
+Business Logic Handling:
+
+- Action Discovery: Finds all actions for a given script with proper ordering
+- Contract Filtering: Locates specific ContractVideoAction records for the target video
+- Bulk Updates: Efficiently updates delta time for all matching records
+- Data Integrity: Ensures all related actions maintain consistent timing synchronization
+- Performance Optimization: Uses database-level operations for bulk updates
+
+The contractVideoActions API now provides robust video-action synchronization management with efficient batch processing for timing
+adjustments, proper TypeScript type safety, and authentication.
