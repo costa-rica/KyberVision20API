@@ -287,7 +287,7 @@ const differenceInTime = (actionTimestamp - referenceTimestamp) / 1000;
 
 The sessions API now provides comprehensive session and action management functionality for sports video analysis, with proper TypeScript type safety and authentication.
 
-## Implemented contractTeamUsers routes
+## Implemented contractTeamUsers routes (commit a400d07d4ed6da12c18c28c566640ad7d1b938d4)
 
 Successfully implemented the complete contractTeamUsers functionality for the TypeScript version. Here's what was accomplished:
 
@@ -297,7 +297,7 @@ Successfully implemented the complete contractTeamUsers functionality for the Ty
 Complete team membership management API with endpoints for:
 
 - `GET /contract-team-users` - Fetches user's team memberships with join tokens
-- `POST /contract-team-users/create/:teamId` - Creates or updates team user contracts  
+- `POST /contract-team-users/create/:teamId` - Creates or updates team user contracts
 - `GET /contract-team-users/:teamId` - Fetches squad members for a team with player flags
 - `POST /contract-team-users/add-squad-member` - Adds users to teams or sends invitations
 - `GET /contract-team-users/create-join-token/:teamId` - Creates join tokens (not currently used)
@@ -306,11 +306,13 @@ Complete team membership management API with endpoints for:
 - `DELETE /contract-team-users/` - Removes users from teams
 
 **2. Updated src/app.ts**
+
 - Added contractTeamUsers router import and mounting at `/contract-team-users` path
 
 ### Key Features Implemented:
 
 **Team Membership Management:**
+
 1. **User Team Access** - Fetches all teams a user belongs to with join tokens
 2. **Contract Creation** - Creates or updates team user contracts with role permissions
 3. **Squad Management** - Manages team squad members with player status flags
@@ -320,6 +322,7 @@ Complete team membership management API with endpoints for:
 7. **User Removal** - Removes users from team contracts
 
 **Player Status Integration:**
+
 - **Player Flag Detection** - Determines if squad members are also players
 - **Cross-Reference Checks** - Validates player status across ContractTeamPlayer and ContractPlayerUser tables
 - **Enhanced Squad Data** - Returns comprehensive squad member information with player associations
@@ -327,54 +330,67 @@ Complete team membership management API with endpoints for:
 ### Key TypeScript Fixes:
 
 **Sequelize Association Access Issues:**
+
 - **Problem**: TypeScript couldn't access Team and User associations directly from ContractTeamUser instances
 - **Solution**: Cast `toJSON()` result to `any` type to access included association data
+
 ```typescript
 const ctuJSON = ctu.toJSON() as any;
 const { Team, ...ctuData } = ctuJSON;
 ```
 
 **Include Structure Type Errors:**
+
 - **Problem**: TypeScript required array format for Sequelize include with nested associations
 - **Solution**: Wrap include objects in arrays for proper typing
+
 ```typescript
 include: [
-  {
-    model: User,
-    attributes: ["id", "username", "email"],
-    include: [
-      {
-        model: ContractPlayerUser,
-      }
-    ],
-  }
-]
+	{
+		model: User,
+		attributes: ["id", "username", "email"],
+		include: [
+			{
+				model: ContractPlayerUser,
+			},
+		],
+	},
+];
 ```
 
 **Parameter Type Conversions:**
+
 - **Problem**: Route parameters come as strings but database expects numbers for teamId
 - **Solution**: Convert string parameters to numbers consistently
+
 ```typescript
 const teamId = Number(req.params.teamId);
 ```
 
 **Null Safety for Associations:**
+
 - **Problem**: Team associations could be null causing runtime errors
 - **Solution**: Added null checks with proper error handling and filtering
+
 ```typescript
 if (!team) {
-  console.log("Warning: Team association not found for ContractTeamUser", ctu.id);
-  return null;
+	console.log(
+		"Warning: Team association not found for ContractTeamUser",
+		ctu.id
+	);
+	return null;
 }
 ```
 
 ### Database Relationship Handling:
+
 - **Complex Joins** - Handles multiple table relationships between Users, Teams, Players, and Contracts
 - **Player Status Logic** - Cross-references ContractTeamPlayer and ContractPlayerUser tables for accurate player flags
 - **Invitation System** - Manages PendingInvitations table for non-registered user invitations
 - **JWT Token Integration** - Creates and verifies join tokens with team-specific data
 
 ### TypeScript Improvements:
+
 - **Type Safety** - Proper TypeScript types for all request/response objects and database operations
 - **Non-null Assertions** - Used `process.env.JWT_SECRET!` for environment variables
 - **Modern Imports** - ES6 import syntax throughout
@@ -383,3 +399,43 @@ if (!team) {
 - **Naming Correction** - Fixed from singular `contractTeamUser` to plural `contractTeamUsers` for consistency
 
 The contractTeamUsers API now provides complete team membership management functionality including user invitations, role management, join token systems, and squad member administration, all with proper TypeScript type safety and authentication.
+
+## Implemented players routes (commit )
+
+Created Files:
+
+src/routes/players.ts - Complete player management API with endpoints for:
+
+- GET /players/team/:teamId - Fetches all players for a specific team with contract details and user associations
+- GET /players/profile-picture/:filename - Serves player profile pictures from the configured directory
+
+Updated src/app.ts - Added players router import and mounting at /players path
+
+Key Features Implemented:
+
+Player Data Retrieval:
+
+1. Team Player Fetching - Gets all players associated with a specific team
+2. Contract Integration - Includes ContractTeamPlayer data (shirt numbers, positions, roles)
+3. User Association - Links players to registered users when applicable
+4. Profile Picture Serving - Serves player profile images with proper error handling
+
+Key TypeScript Improvements:
+
+1. Type Safety: Added proper TypeScript types for Request/Response objects
+2. Parameter Conversion: Convert teamId from string to number using Number()
+3. Association Access: Used toJSON() cast to any for accessing Sequelize associations
+4. Error Handling: Enhanced error handling with try-catch blocks and typed error objects
+5. Path Security: Used path.join() and path.resolve() for secure file path handling
+6. Environment Variable Validation: Added checks for required environment variables
+7. Modern Imports: Used ES6 import syntax throughout
+8. Safe Array Access: Used optional chaining and null checks for association data
+
+Database Relationship Handling:
+
+- Complex Joins: Handles relationships between Players, ContractTeamPlayer, ContractPlayerUser, and Users
+- Association Filtering: Properly accesses nested association data with null safety
+- User Flag Detection: Determines if players are also registered users in the system
+
+The players API now provides comprehensive player data retrieval and profile picture serving functionality with proper TypeScript type safety
+and authentication.

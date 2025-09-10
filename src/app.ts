@@ -26,6 +26,7 @@ import adminDbRouter from "./routes/adminDb";
 import teamsRouter from "./routes/teams";
 import sessionsRouter from "./routes/sessions";
 import contractTeamUsersRouter from "./routes/contractTeamUsers";
+import playersRouter from "./routes/players";
 
 
 // Verify and create necessary directories first
@@ -56,6 +57,7 @@ app.use("/admin-db", adminDbRouter);
 app.use("/teams", teamsRouter);
 app.use("/sessions", sessionsRouter);
 app.use("/contract-team-users", contractTeamUsersRouter);
+app.use("/players", playersRouter);
 
 // Increase payload size for large files
 app.use(express.json({ limit: "6gb" }));
