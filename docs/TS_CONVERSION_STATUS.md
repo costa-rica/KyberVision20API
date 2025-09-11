@@ -810,3 +810,9 @@ Key Benefits of These Fixes:
 
 The TypeScript strict mode is now helping us write more robust, type-safe code while providing better error handling for end users. All
 compilation errors are resolved and the codebase is now more maintainable and reliable!
+
+## Implmeneted server.ts (commit )
+
+- entry point `npm run dev` is app.ts
+- entry point `npm run start` is server.ts
+- `npm run build` compiles to dist with server.ts as entry point

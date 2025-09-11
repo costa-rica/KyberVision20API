@@ -75,7 +75,8 @@ app.use("/videos", videosRouter);
 app.use(express.json({ limit: "6gb" }));
 app.use(express.urlencoded({ limit: "6gb", extended: true }));
 
-async function bootstrap() {
+// Initialize database and startup functions
+async function initializeApp() {
   try {
     // Initialize and sync DB
     initModels();
@@ -85,15 +86,23 @@ async function bootstrap() {
     // Run startup functions after database is ready
     await onStartUpCreateEnvUsers();
     await onStartUpCreateLeague();
-
-    // Start HTTP server only after DB is ready
-    app.listen(port, () => {
-      console.log(`🚀 Server running at http://localhost:${port}`);
-    });
+    
+    console.log("✅ App initialization completed");
   } catch (err) {
-    console.error("❌ Startup failed:", err);
+    console.error("❌ App initialization failed:", err);
     process.exit(1);
   }
 }
 
-bootstrap();
+// Initialize the app when this module is imported
+initializeApp();
+
+// Start server if this file is run directly (for development)
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`✅ Development server running on http://localhost:${port}`);
+  });
+}
+
+// Export the app for server.ts to use
+export default app;
