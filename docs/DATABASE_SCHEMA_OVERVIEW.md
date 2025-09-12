@@ -127,42 +127,42 @@ This is the directory layout of the KyberVision20Db package.
 
 **Purpose**: Sports teams within the system
 
-| Column      | Type    | Constraints                 | Description             |
-| ----------- | ------- | --------------------------- | ----------------------- |
-| id          | INTEGER | PK, Auto Increment          | Primary key             |
-| teamName    | STRING  | NOT NULL                    | Team name               |
-| city        | STRING  | NULL                        | Team's city             |
-| coachName   | STRING  | NULL                        | Coach's name            |
-| description | STRING  | NULL                        | Team description        |
-| image       | STRING  | NULL                        | Team image path         |
-| visibility  | STRING  | NOT NULL, DEFAULT "Private" | Team visibility setting |
-| createdAt   | DATE    | NOT NULL                    | Record creation timestamp |
+| Column      | Type    | Constraints                 | Description                  |
+| ----------- | ------- | --------------------------- | ---------------------------- |
+| id          | INTEGER | PK, Auto Increment          | Primary key                  |
+| teamName    | STRING  | NOT NULL                    | Team name                    |
+| city        | STRING  | NULL                        | Team's city                  |
+| coachName   | STRING  | NULL                        | Coach's name                 |
+| description | STRING  | NULL                        | Team description             |
+| image       | STRING  | NULL                        | Team image path              |
+| visibility  | STRING  | NOT NULL, DEFAULT "Private" | Team visibility setting      |
+| createdAt   | DATE    | NOT NULL                    | Record creation timestamp    |
 | updatedAt   | DATE    | NOT NULL                    | Record last update timestamp |
 
 ### players
 
 **Purpose**: Individual player profiles
 
-| Column    | Type    | Constraints                              | Description         |
-| --------- | ------- | ---------------------------------------- | ------------------- |
-| id        | INTEGER | PK, Auto Increment                       | Primary key         |
-| firstName | STRING  | NOT NULL                                 | Player's first name |
-| lastName  | STRING  | NOT NULL                                 | Player's last name  |
-| birthDate | DATE    | NULL                                     | Player's birth date |
-| image     | STRING  | DEFAULT "\_playerDefaultRedditAlien.png" | Player image path   |
-| createdAt | DATE    | NOT NULL                                 | Record creation timestamp |
+| Column    | Type    | Constraints                              | Description                  |
+| --------- | ------- | ---------------------------------------- | ---------------------------- |
+| id        | INTEGER | PK, Auto Increment                       | Primary key                  |
+| firstName | STRING  | NOT NULL                                 | Player's first name          |
+| lastName  | STRING  | NOT NULL                                 | Player's last name           |
+| birthDate | DATE    | NULL                                     | Player's birth date          |
+| image     | STRING  | DEFAULT "\_playerDefaultRedditAlien.png" | Player image path            |
+| createdAt | DATE    | NOT NULL                                 | Record creation timestamp    |
 | updatedAt | DATE    | NOT NULL                                 | Record last update timestamp |
 
 ### leagues
 
 **Purpose**: Sports leagues and competitions
 
-| Column   | Type    | Constraints        | Description              |
-| -------- | ------- | ------------------ | ------------------------ |
-| id       | INTEGER | PK, Auto Increment | Primary key              |
-| name     | STRING  | NOT NULL           | League name              |
-| category | STRING  | NOT NULL           | League category/division |
-| createdAt | DATE    | NOT NULL           | Record creation timestamp |
+| Column    | Type    | Constraints        | Description                  |
+| --------- | ------- | ------------------ | ---------------------------- |
+| id        | INTEGER | PK, Auto Increment | Primary key                  |
+| name      | STRING  | NOT NULL           | League name                  |
+| category  | STRING  | NOT NULL           | League category/division     |
+| createdAt | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt | DATE    | NOT NULL           | Record last update timestamp |
 
 ### sessions
@@ -205,36 +205,36 @@ This is the directory layout of the KyberVision20Db package.
 
 **Purpose**: Scripting sessions for live analysis
 
-| Column                        | Type    | Constraints        | Description          |
-| ----------------------------- | ------- | ------------------ | -------------------- |
-| id                            | INTEGER | PK, Auto Increment | Primary key          |
-| sessionId                     | INTEGER | NOT NULL           | Reference to session |
-| timestampReferenceFirstAction | DATE    | NULL               | Reference timestamp  |
-| isScriptingLive               | BOOLEAN | DEFAULT false      | Live scripting flag  |
-| createdAt                     | DATE    | NOT NULL           | Record creation timestamp |
+| Column                        | Type    | Constraints        | Description                  |
+| ----------------------------- | ------- | ------------------ | ---------------------------- |
+| id                            | INTEGER | PK, Auto Increment | Primary key                  |
+| sessionId                     | INTEGER | NOT NULL           | Reference to session         |
+| timestampReferenceFirstAction | DATE    | NULL               | Reference timestamp          |
+| isScriptingLive               | BOOLEAN | DEFAULT false      | Live scripting flag          |
+| createdAt                     | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt                     | DATE    | NOT NULL           | Record last update timestamp |
 
 ### actions
 
 **Purpose**: Individual game actions/events
 
-| Column            | Type    | Constraints            | Description           |
-| ----------------- | ------- | ---------------------- | --------------------- |
-| id                | INTEGER | PK, Auto Increment     | Primary key           |
-| complexId         | INTEGER | NULL                   | Reference to complex  |
-| pointId           | INTEGER | NULL                   | Point identifier      |
-| scriptId          | INTEGER | NULL                   | Reference to script   |
-| playerId          | INTEGER | NOT NULL               | Reference to player   |
-| type              | INTEGER | NOT NULL               | Action type code      |
-| subtype           | INTEGER | NULL                   | Action subtype code   |
-| quality           | STRING  | NOT NULL               | Action quality rating |
-| timestamp         | DATE    | NOT NULL               | Action timestamp      |
-| zone              | STRING  | NOT NULL               | Court/field zone      |
-| setNumber         | INTEGER | NOT NULL, MIN 1, MAX 5 | Set number (1-5)      |
-| scoreTeamAnalyzed | INTEGER | NOT NULL               | Analyzed team score   |
-| scoreTeamOther    | INTEGER | NOT NULL               | Opponent team score   |
-| rotation          | STRING  | NULL                   | Player rotation       |
-| createdAt         | DATE    | NOT NULL               | Record creation timestamp |
+| Column            | Type    | Constraints            | Description                  |
+| ----------------- | ------- | ---------------------- | ---------------------------- |
+| id                | INTEGER | PK, Auto Increment     | Primary key                  |
+| complexId         | INTEGER | NULL                   | Reference to complex         |
+| pointId           | INTEGER | NULL                   | Point identifier             |
+| scriptId          | INTEGER | NULL                   | Reference to script          |
+| playerId          | INTEGER | NOT NULL               | Reference to player          |
+| type              | INTEGER | NOT NULL               | Action type code             |
+| subtype           | INTEGER | NULL                   | Action subtype code          |
+| quality           | STRING  | NOT NULL               | Action quality rating        |
+| timestamp         | DATE    | NOT NULL               | Action timestamp             |
+| area              | STRING  | NOT NULL               | Court/field area             |
+| setNumber         | INTEGER | NOT NULL, MIN 1, MAX 5 | Set number (1-5)             |
+| scoreTeamAnalyzed | INTEGER | NOT NULL               | Analyzed team score          |
+| scoreTeamOther    | INTEGER | NOT NULL               | Opponent team score          |
+| rotation          | STRING  | NULL                   | Player rotation              |
+| createdAt         | DATE    | NOT NULL               | Record creation timestamp    |
 | updatedAt         | DATE    | NOT NULL               | Record last update timestamp |
 
 **Indexes**: Unique index on (timestamp, scriptId)
@@ -243,12 +243,12 @@ This is the directory layout of the KyberVision20Db package.
 
 **Purpose**: Action complexes/combinations
 
-| Column | Type    | Constraints            | Description                        |
-| ------ | ------- | ---------------------- | ---------------------------------- |
-| id     | INTEGER | PK, Auto Increment     | Primary key                        |
-| type   | STRING  | NOT NULL, REGEX /^K.+/ | Complex type (must start with 'K') |
-| createdAt | DATE    | NOT NULL               | Record creation timestamp |
-| updatedAt | DATE    | NOT NULL               | Record last update timestamp |
+| Column    | Type    | Constraints            | Description                        |
+| --------- | ------- | ---------------------- | ---------------------------------- |
+| id        | INTEGER | PK, Auto Increment     | Primary key                        |
+| type      | STRING  | NOT NULL, REGEX /^K.+/ | Complex type (must start with 'K') |
+| createdAt | DATE    | NOT NULL               | Record creation timestamp          |
+| updatedAt | DATE    | NOT NULL               | Record last update timestamp       |
 
 ## Relationship/Contract Tables
 
@@ -256,13 +256,13 @@ This is the directory layout of the KyberVision20Db package.
 
 **Purpose**: Links users to actions they've analyzed
 
-| Column    | Type    | Constraints        | Description          |
-| --------- | ------- | ------------------ | -------------------- |
-| id        | INTEGER | PK, Auto Increment | Primary key          |
-| userId    | INTEGER | NOT NULL           | Reference to user    |
-| actionId  | INTEGER | NOT NULL           | Reference to action  |
-| sessionId | INTEGER | NOT NULL           | Reference to session |
-| createdAt | DATE    | NOT NULL           | Record creation timestamp |
+| Column    | Type    | Constraints        | Description                  |
+| --------- | ------- | ------------------ | ---------------------------- |
+| id        | INTEGER | PK, Auto Increment | Primary key                  |
+| userId    | INTEGER | NOT NULL           | Reference to user            |
+| actionId  | INTEGER | NOT NULL           | Reference to action          |
+| sessionId | INTEGER | NOT NULL           | Reference to session         |
+| createdAt | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt | DATE    | NOT NULL           | Record last update timestamp |
 
 **Indexes**: Unique index on (userId, actionId)
@@ -271,68 +271,68 @@ This is the directory layout of the KyberVision20Db package.
 
 **Purpose**: Links players to teams with role information
 
-| Column               | Type    | Constraints        | Description            |
-| -------------------- | ------- | ------------------ | ---------------------- |
-| id                   | INTEGER | PK, Auto Increment | Primary key            |
-| playerId             | INTEGER | NOT NULL           | Reference to player    |
-| teamId               | INTEGER | NOT NULL           | Reference to team      |
-| shirtNumber          | INTEGER | NULL               | Player's jersey number |
-| position             | STRING  | NULL               | Playing position       |
-| positionAbbreviation | STRING  | NULL               | Position abbreviation  |
-| role                 | STRING  | NULL               | Player's role on team  |
-| createdAt            | DATE    | NOT NULL           | Record creation timestamp |
+| Column               | Type    | Constraints        | Description                  |
+| -------------------- | ------- | ------------------ | ---------------------------- |
+| id                   | INTEGER | PK, Auto Increment | Primary key                  |
+| playerId             | INTEGER | NOT NULL           | Reference to player          |
+| teamId               | INTEGER | NOT NULL           | Reference to team            |
+| shirtNumber          | INTEGER | NULL               | Player's jersey number       |
+| position             | STRING  | NULL               | Playing position             |
+| positionAbbreviation | STRING  | NULL               | Position abbreviation        |
+| role                 | STRING  | NULL               | Player's role on team        |
+| createdAt            | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt            | DATE    | NOT NULL           | Record last update timestamp |
 
 ### contractTeamUser
 
 **Purpose**: Links users to teams with permission levels
 
-| Column      | Type    | Constraints             | Description           |
-| ----------- | ------- | ----------------------- | --------------------- |
-| id          | INTEGER | PK, Auto Increment      | Primary key           |
-| userId      | INTEGER | NOT NULL                | Reference to user     |
-| teamId      | INTEGER | NOT NULL                | Reference to team     |
-| isSuperUser | BOOLEAN | NOT NULL, DEFAULT false | Super user privileges |
-| isAdmin     | BOOLEAN | NOT NULL, DEFAULT false | Admin privileges      |
-| isCoach     | BOOLEAN | NOT NULL, DEFAULT false | Coach privileges      |
-| createdAt   | DATE    | NOT NULL                | Record creation timestamp |
+| Column      | Type    | Constraints             | Description                  |
+| ----------- | ------- | ----------------------- | ---------------------------- |
+| id          | INTEGER | PK, Auto Increment      | Primary key                  |
+| userId      | INTEGER | NOT NULL                | Reference to user            |
+| teamId      | INTEGER | NOT NULL                | Reference to team            |
+| isSuperUser | BOOLEAN | NOT NULL, DEFAULT false | Super user privileges        |
+| isAdmin     | BOOLEAN | NOT NULL, DEFAULT false | Admin privileges             |
+| isCoach     | BOOLEAN | NOT NULL, DEFAULT false | Coach privileges             |
+| createdAt   | DATE    | NOT NULL                | Record creation timestamp    |
 | updatedAt   | DATE    | NOT NULL                | Record last update timestamp |
 
 ### contractLeagueTeam
 
 **Purpose**: Links teams to leagues
 
-| Column   | Type    | Constraints        | Description         |
-| -------- | ------- | ------------------ | ------------------- |
-| id       | INTEGER | PK, Auto Increment | Primary key         |
-| leagueId | INTEGER | NOT NULL           | Reference to league |
-| teamId   | INTEGER | NOT NULL           | Reference to team   |
-| createdAt | DATE    | NOT NULL           | Record creation timestamp |
+| Column    | Type    | Constraints        | Description                  |
+| --------- | ------- | ------------------ | ---------------------------- |
+| id        | INTEGER | PK, Auto Increment | Primary key                  |
+| leagueId  | INTEGER | NOT NULL           | Reference to league          |
+| teamId    | INTEGER | NOT NULL           | Reference to team            |
+| createdAt | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt | DATE    | NOT NULL           | Record last update timestamp |
 
 ### contractPlayerUser
 
 **Purpose**: One-to-one mapping between players and users
 
-| Column   | Type    | Constraints        | Description         |
-| -------- | ------- | ------------------ | ------------------- |
-| id       | INTEGER | PK, Auto Increment | Primary key         |
-| playerId | INTEGER | NOT NULL, UNIQUE   | Reference to player |
-| userId   | INTEGER | NOT NULL, UNIQUE   | Reference to user   |
-| createdAt | DATE    | NOT NULL           | Record creation timestamp |
+| Column    | Type    | Constraints        | Description                  |
+| --------- | ------- | ------------------ | ---------------------------- |
+| id        | INTEGER | PK, Auto Increment | Primary key                  |
+| playerId  | INTEGER | NOT NULL, UNIQUE   | Reference to player          |
+| userId    | INTEGER | NOT NULL, UNIQUE   | Reference to user            |
+| createdAt | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt | DATE    | NOT NULL           | Record last update timestamp |
 
 ### contractVideoAction
 
 **Purpose**: Links actions to video timestamps
 
-| Column             | Type    | Constraints        | Description            |
-| ------------------ | ------- | ------------------ | ---------------------- |
-| id                 | INTEGER | PK, Auto Increment | Primary key            |
-| actionId           | INTEGER | NOT NULL           | Reference to action    |
-| videoId            | INTEGER | NULL               | Reference to video     |
-| deltaTimeInSeconds | FLOAT   | NULL, DEFAULT 0.0  | Time offset in seconds |
-| createdAt          | DATE    | NOT NULL           | Record creation timestamp |
+| Column             | Type    | Constraints        | Description                  |
+| ------------------ | ------- | ------------------ | ---------------------------- |
+| id                 | INTEGER | PK, Auto Increment | Primary key                  |
+| actionId           | INTEGER | NOT NULL           | Reference to action          |
+| videoId            | INTEGER | NULL               | Reference to video           |
+| deltaTimeInSeconds | FLOAT   | NULL, DEFAULT 0.0  | Time offset in seconds       |
+| createdAt          | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt          | DATE    | NOT NULL           | Record last update timestamp |
 
 ## Specialized Tables
@@ -341,25 +341,25 @@ This is the directory layout of the KyberVision20Db package.
 
 **Purpose**: Tracks opponent serve timing data
 
-| Column              | Type    | Constraints        | Description                |
-| ------------------- | ------- | ------------------ | -------------------------- |
-| id                  | INTEGER | PK, Auto Increment | Primary key                |
-| actionId            | INTEGER | NOT NULL           | Reference to action        |
-| timestampServiceOpp | DATE    | NOT NULL           | Opponent service timestamp |
-| serveType           | INTEGER | NOT NULL           | Type of serve              |
-| createdAt           | DATE    | NOT NULL           | Record creation timestamp |
+| Column              | Type    | Constraints        | Description                  |
+| ------------------- | ------- | ------------------ | ---------------------------- |
+| id                  | INTEGER | PK, Auto Increment | Primary key                  |
+| actionId            | INTEGER | NOT NULL           | Reference to action          |
+| timestampServiceOpp | DATE    | NOT NULL           | Opponent service timestamp   |
+| serveType           | INTEGER | NOT NULL           | Type of serve                |
+| createdAt           | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt           | DATE    | NOT NULL           | Record last update timestamp |
 
 ### pendingInvitations
 
 **Purpose**: Manages team invitation workflow
 
-| Column | Type    | Constraints        | Description           |
-| ------ | ------- | ------------------ | --------------------- |
-| id     | INTEGER | PK, Auto Increment | Primary key           |
-| email  | STRING  | NOT NULL           | Invitee email address |
-| teamId | INTEGER | NOT NULL           | Reference to team     |
-| createdAt | DATE    | NOT NULL           | Record creation timestamp |
+| Column    | Type    | Constraints        | Description                  |
+| --------- | ------- | ------------------ | ---------------------------- |
+| id        | INTEGER | PK, Auto Increment | Primary key                  |
+| email     | STRING  | NOT NULL           | Invitee email address        |
+| teamId    | INTEGER | NOT NULL           | Reference to team            |
+| createdAt | DATE    | NOT NULL           | Record creation timestamp    |
 | updatedAt | DATE    | NOT NULL           | Record last update timestamp |
 
 ## Key Relationships

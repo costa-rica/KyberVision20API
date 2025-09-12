@@ -38,31 +38,34 @@ User authentication and registration endpoints.
 Creates a new user account and handles invitation processing.
 
 **Request Body:**
+
 ```json
 {
-  "firstName": "string",
-  "lastName": "string", 
-  "password": "string (required)",
-  "email": "string (required, unique)"
+	"firstName": "string",
+	"lastName": "string",
+	"password": "string (required)",
+	"email": "string (required, unique)"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "message": "Successfully created user",
-  "user": {
-    "id": "number",
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string",
-    "username": "string"
-  },
-  "token": "string (JWT)"
+	"message": "Successfully created user",
+	"user": {
+		"id": "number",
+		"firstName": "string",
+		"lastName": "string",
+		"email": "string",
+		"username": "string"
+	},
+	"token": "string (JWT)"
 }
 ```
 
 **Functionality:**
+
 - Generates username from email prefix
 - Hashes password with bcrypt
 - Sends registration email (environment dependent)
@@ -74,30 +77,33 @@ Creates a new user account and handles invitation processing.
 Authenticates a user and returns a JWT token.
 
 **Request Body:**
+
 ```json
 {
-  "email": "string (required)",
-  "password": "string (required)"
+	"email": "string (required)",
+	"password": "string (required)"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "message": "Connexion réussie.",
-  "token": "string (JWT)",
-  "user": {
-    "id": "number",
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string",
-    "username": "string",
-    "ContractTeamUsers": []
-  }
+	"message": "Connexion rï¿½ussie.",
+	"token": "string (JWT)",
+	"user": {
+		"id": "number",
+		"firstName": "string",
+		"lastName": "string",
+		"email": "string",
+		"username": "string",
+		"ContractTeamUsers": []
+	}
 }
 ```
 
 **Functionality:**
+
 - Validates credentials against database
 - Updates user's `updatedAt` timestamp
 - Returns user data without password
@@ -114,17 +120,20 @@ Database administration endpoints for backup, import, and table management.
 Retrieves all data from a specific database table.
 
 **Parameters:**
+
 - `tableName`: Name of the database table
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "data": []
+	"result": true,
+	"data": []
 }
 ```
 
 **Functionality:**
+
 - Returns all records from specified table
 - Creates dummy row with null values if table is empty
 - Validates table exists in model definitions
@@ -134,11 +143,12 @@ Retrieves all data from a specific database table.
 Creates a backup of the entire database as a ZIP file.
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "Database backup completed",
-  "backupFile": "string (file path)"
+	"result": true,
+	"message": "Database backup completed",
+	"backupFile": "string (file path)"
 }
 ```
 
@@ -147,10 +157,11 @@ Creates a backup of the entire database as a ZIP file.
 Lists all available database backup files.
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "backups": ["string array of zip filenames"]
+	"result": true,
+	"backups": ["string array of zip filenames"]
 }
 ```
 
@@ -159,6 +170,7 @@ Lists all available database backup files.
 Downloads a specific backup file.
 
 **Parameters:**
+
 - `filename`: Name of the backup file to download
 
 ### GET /admin-db/db-row-counts-by-table
@@ -166,15 +178,16 @@ Downloads a specific backup file.
 Returns row counts for all database tables.
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "arrayRowCountsByTable": [
-    {
-      "tableName": "string",
-      "rowCount": "number"
-    }
-  ]
+	"result": true,
+	"arrayRowCountsByTable": [
+		{
+			"tableName": "string",
+			"rowCount": "number"
+		}
+	]
 }
 ```
 
@@ -185,14 +198,16 @@ Imports data from a backup ZIP file.
 **Request:** Multipart form with `backupFile` field
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "Import completed successfully"
+	"result": true,
+	"message": "Import completed successfully"
 }
 ```
 
 **Functionality:**
+
 - Extracts ZIP file to temporary directory
 - Reads CSV files and imports to database tables
 - Cleans up temporary files after processing
@@ -202,6 +217,7 @@ Imports data from a backup ZIP file.
 Deletes a specific backup file.
 
 **Parameters:**
+
 - `filename`: Name of the backup file to delete
 
 ### DELETE /admin-db/the-entire-database
@@ -209,11 +225,12 @@ Deletes a specific backup file.
 Deletes the entire database file after creating a backup.
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "Database successfully deleted.",
-  "backupFile": "string (backup file path)"
+	"result": true,
+	"message": "Database successfully deleted.",
+	"backupFile": "string (backup file path)"
 }
 ```
 
@@ -222,6 +239,7 @@ Deletes the entire database file after creating a backup.
 Truncates all data from a specific table.
 
 **Parameters:**
+
 - `tableName`: Name of the table to truncate
 
 ### GET /admin-db/table-clean/:tableName
@@ -233,6 +251,7 @@ Alternative endpoint to retrieve table data (same as GET /admin-db/table/:tableN
 Deletes a specific row from a table.
 
 **Parameters:**
+
 - `tableName`: Name of the table
 - `rowId`: ID of the row to delete
 
@@ -241,6 +260,7 @@ Deletes a specific row from a table.
 Updates or creates a row in a specific table.
 
 **Parameters:**
+
 - `tableName`: Name of the table
 - `rowId`: ID of the row to update (or null/undefined for new row)
 
@@ -257,20 +277,21 @@ Team management and player association endpoints.
 Retrieves all teams in the system.
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "teams": [
-    {
-      "id": "number",
-      "teamName": "string",
-      "city": "string",
-      "coachName": "string",
-      "description": "string",
-      "image": "string",
-      "visibility": "string"
-    }
-  ]
+	"result": true,
+	"teams": [
+		{
+			"id": "number",
+			"teamName": "string",
+			"city": "string",
+			"coachName": "string",
+			"description": "string",
+			"image": "string",
+			"visibility": "string"
+		}
+	]
 }
 ```
 
@@ -279,37 +300,40 @@ Retrieves all teams in the system.
 Creates a new team with optional players.
 
 **Request Body:**
+
 ```json
 {
-  "teamName": "string (required)",
-  "description": "string",
-  "playersArray": [
-    {
-      "firstName": "string",
-      "lastName": "string",
-      "shirtNumber": "number",
-      "position": "string",
-      "positionAbbreviation": "string"
-    }
-  ],
-  "leagueName": "string"
+	"teamName": "string (required)",
+	"description": "string",
+	"playersArray": [
+		{
+			"firstName": "string",
+			"lastName": "string",
+			"shirtNumber": "number",
+			"position": "string",
+			"positionAbbreviation": "string"
+		}
+	],
+	"leagueName": "string"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "teamNew": {
-    "id": "number",
-    "teamName": "string",
-    "description": "string",
-    "playersArray": []
-  }
+	"result": true,
+	"teamNew": {
+		"id": "number",
+		"teamName": "string",
+		"description": "string",
+		"playersArray": []
+	}
 }
 ```
 
 **Functionality:**
+
 - Creates team record
 - Associates team with league (defaults to league ID 1)
 - Creates team-user contract with admin privileges for creator
@@ -320,10 +344,11 @@ Creates a new team with optional players.
 Updates a team's visibility setting.
 
 **Request Body:**
+
 ```json
 {
-  "teamId": "number (required)",
-  "visibility": "string (required)"
+	"teamId": "number (required)",
+	"visibility": "string (required)"
 }
 ```
 
@@ -332,14 +357,15 @@ Updates a team's visibility setting.
 Adds a new player to an existing team.
 
 **Request Body:**
+
 ```json
 {
-  "teamId": "number (required)",
-  "firstName": "string (required)",
-  "lastName": "string",
-  "shirtNumber": "number",
-  "position": "string",
-  "positionAbbreviation": "string"
+	"teamId": "number (required)",
+	"firstName": "string (required)",
+	"lastName": "string",
+	"shirtNumber": "number",
+	"position": "string",
+	"positionAbbreviation": "string"
 }
 ```
 
@@ -348,10 +374,11 @@ Adds a new player to an existing team.
 Removes a player from a team.
 
 **Request Body:**
+
 ```json
 {
-  "teamId": "number (required)",
-  "playerId": "number (required)"
+	"teamId": "number (required)",
+	"playerId": "number (required)"
 }
 ```
 
@@ -366,31 +393,33 @@ Team membership and role management endpoints (formerly "Tribe" functionality).
 Gets all teams associated with the authenticated user.
 
 **Response:**
+
 ```json
 {
-  "teamsArray": [
-    {
-      "id": "number",
-      "teamName": "string",
-      "city": "string",
-      "coachName": "string",
-      "genericJoinToken": "string (JWT)"
-    }
-  ],
-  "contractTeamUserArray": [
-    {
-      "id": "number",
-      "userId": "number",
-      "teamId": "number",
-      "isSuperUser": "boolean",
-      "isAdmin": "boolean",
-      "isCoach": "boolean"
-    }
-  ]
+	"teamsArray": [
+		{
+			"id": "number",
+			"teamName": "string",
+			"city": "string",
+			"coachName": "string",
+			"genericJoinToken": "string (JWT)"
+		}
+	],
+	"contractTeamUserArray": [
+		{
+			"id": "number",
+			"userId": "number",
+			"teamId": "number",
+			"isSuperUser": "boolean",
+			"isAdmin": "boolean",
+			"isCoach": "boolean"
+		}
+	]
 }
 ```
 
 **Functionality:**
+
 - Returns teams user is associated with
 - Generates join tokens for team sharing
 - Excludes Team data from contract objects
@@ -400,14 +429,16 @@ Gets all teams associated with the authenticated user.
 Creates or updates a team membership contract.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Request Body:**
+
 ```json
 {
-  "isSuperUser": "boolean",
-  "isAdmin": "boolean", 
-  "isCoach": "boolean"
+	"isSuperUser": "boolean",
+	"isAdmin": "boolean",
+	"isCoach": "boolean"
 }
 ```
 
@@ -416,24 +447,26 @@ Creates or updates a team membership contract.
 Gets all squad members for a specific team.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Response:**
+
 ```json
 {
-  "squadArray": [
-    {
-      "id": "number",
-      "userId": "number",
-      "username": "string",
-      "email": "string",
-      "isSuperUser": "boolean",
-      "isAdmin": "boolean",
-      "isCoach": "boolean",
-      "isPlayer": "boolean",
-      "playerId": "number"
-    }
-  ]
+	"squadArray": [
+		{
+			"id": "number",
+			"userId": "number",
+			"username": "string",
+			"email": "string",
+			"isSuperUser": "boolean",
+			"isAdmin": "boolean",
+			"isCoach": "boolean",
+			"isPlayer": "boolean",
+			"playerId": "number"
+		}
+	]
 }
 ```
 
@@ -442,14 +475,16 @@ Gets all squad members for a specific team.
 Adds a new member to a team by email.
 
 **Request Body:**
+
 ```json
 {
-  "teamId": "number (required)",
-  "email": "string (required)"
+	"teamId": "number (required)",
+	"email": "string (required)"
 }
 ```
 
 **Functionality:**
+
 - If user exists, creates team contract immediately
 - If user doesn't exist, creates pending invitation
 - Sends invitation email for non-existing users
@@ -459,12 +494,14 @@ Adds a new member to a team by email.
 Generates a temporary join token for a team.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Response:**
+
 ```json
 {
-  "shareUrl": "string (full URL with token)"
+	"shareUrl": "string (full URL with token)"
 }
 ```
 
@@ -473,9 +510,11 @@ Generates a temporary join token for a team.
 Joins a team using a join token.
 
 **Parameters:**
+
 - `joinToken`: JWT token containing teamId
 
 **Functionality:**
+
 - Validates token and extracts teamId
 - Prevents duplicate team memberships
 - Creates new team contract for user
@@ -485,11 +524,12 @@ Joins a team using a join token.
 Toggles role permissions for a team member.
 
 **Request Body:**
+
 ```json
 {
-  "teamId": "number (required)",
-  "userId": "number (required)",
-  "role": "string (Coach|Admin|Member)"
+	"teamId": "number (required)",
+	"userId": "number (required)",
+	"role": "string (Coach|Admin|Member)"
 }
 ```
 
@@ -498,9 +538,10 @@ Toggles role permissions for a team member.
 Removes a user from a team.
 
 **Request Body:**
+
 ```json
 {
-  "contractTeamUserId": "number (required)"
+	"contractTeamUserId": "number (required)"
 }
 ```
 
@@ -515,37 +556,40 @@ Player profile and team association management.
 Gets all players associated with a specific team.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "team": {
-    "id": "number",
-    "teamName": "string"
-  },
-  "playersArray": [
-    {
-      "id": "number",
-      "firstName": "string",
-      "lastName": "string",
-      "birthDate": "string (date)",
-      "shirtNumber": "number",
-      "position": "string", 
-      "positionAbbreviation": "string",
-      "role": "string",
-      "image": "string",
-      "isUser": "boolean",
-      "userId": "number",
-      "username": "string",
-      "email": "string"
-    }
-  ]
+	"result": true,
+	"team": {
+		"id": "number",
+		"teamName": "string"
+	},
+	"playersArray": [
+		{
+			"id": "number",
+			"firstName": "string",
+			"lastName": "string",
+			"birthDate": "string (date)",
+			"shirtNumber": "number",
+			"position": "string",
+			"positionAbbreviation": "string",
+			"role": "string",
+			"image": "string",
+			"isUser": "boolean",
+			"userId": "number",
+			"username": "string",
+			"email": "string"
+		}
+	]
 }
 ```
 
 **Functionality:**
+
 - Includes team-specific player data (position, shirt number)
 - Shows if player has associated user account
 - Provides user account details if linked
@@ -555,6 +599,7 @@ Gets all players associated with a specific team.
 Serves player profile picture files.
 
 **Parameters:**
+
 - `filename`: Name of the image file
 
 **Response:** Image file or 404 if not found
@@ -570,14 +615,16 @@ Player-to-user account linking management.
 Links a user account to a player profile.
 
 **Request Body:**
+
 ```json
 {
-  "playerId": "number (required)",
-  "userId": "number (required)"
+	"playerId": "number (required)",
+	"userId": "number (required)"
 }
 ```
 
 **Functionality:**
+
 - Creates one-to-one mapping between player and user
 - Updates existing links if they exist
 - Handles cases where user is already linked to another player
@@ -587,6 +634,7 @@ Links a user account to a player profile.
 Removes the link between a player and user account.
 
 **Parameters:**
+
 - `playerId`: ID of the player to unlink
 
 ---
@@ -600,21 +648,23 @@ User action favorites and analysis tracking.
 Updates user's favorite actions for a session.
 
 **Request Body:**
+
 ```json
 {
-  "sessionId": "number (required)",
-  "actionsArray": [
-    {
-      "actionsDbTableId": "number",
-      "isFavorite": "boolean"
-    }
-  ]
+	"sessionId": "number (required)",
+	"actionsArray": [
+		{
+			"actionsDbTableId": "number",
+			"isFavorite": "boolean"
+		}
+	]
 }
 ```
 
 **Functionality:**
+
 - Creates contracts for newly favorited actions
-- Removes contracts for unfavorited actions  
+- Removes contracts for unfavorited actions
 - Maintains consistency between user preferences and database
 
 ---
@@ -628,25 +678,28 @@ Video-to-action synchronization management.
 Updates the time synchronization offset for all actions in a script relative to a video.
 
 **Request Body:**
+
 ```json
 {
-  "newDeltaTimeInSeconds": "number (required)",
-  "scriptId": "number (required)", 
-  "videoId": "number (required)"
+	"newDeltaTimeInSeconds": "number (required)",
+	"scriptId": "number (required)",
+	"videoId": "number (required)"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "ContractVideoAction modified with success",
-  "scriptId": "number",
-  "updatedCount": "number"
+	"result": true,
+	"message": "ContractVideoAction modified with success",
+	"scriptId": "number",
+	"updatedCount": "number"
 }
 ```
 
 **Functionality:**
+
 - Updates deltaTimeInSeconds for all actions in specified script
 - Synchronizes action timestamps with video timeline
 - Used for video analysis and review features
@@ -662,22 +715,25 @@ League and competition management.
 Gets all leagues associated with a specific team.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Response:**
+
 ```json
 {
-  "leaguesArray": [
-    {
-      "id": "number",
-      "name": "string",
-      "contractLeagueTeamId": "number"
-    }
-  ]
+	"leaguesArray": [
+		{
+			"id": "number",
+			"name": "string",
+			"contractLeagueTeamId": "number"
+		}
+	]
 }
 ```
 
 **Functionality:**
+
 - Returns leagues through team-league contracts
 - Sorts leagues by ID
 - Includes contract ID for relationship management
@@ -693,39 +749,42 @@ Training session and match management.
 Gets all actions for a session with video synchronization data for review.
 
 **Request Body:**
+
 ```json
 {
-  "sessionId": "number (required)",
-  "videoId": "number (required)"
+	"sessionId": "number (required)",
+	"videoId": "number (required)"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "sessionId": "number",
-  "videoId": "number", 
-  "actionsArray": [
-    {
-      "id": "number",
-      "type": "number",
-      "quality": "string",
-      "timestamp": "string (date)",
-      "zone": "string",
-      "setNumber": "number",
-      "scoreTeamAnalyzed": "number",
-      "scoreTeamOther": "number",
-      "timestampFromStartOfVideo": "number",
-      "reviewVideoActionsArrayIndex": "number",
-      "favorite": "boolean"
-    }
-  ],
-  "playerDbObjectsArray": []
+	"result": true,
+	"sessionId": "number",
+	"videoId": "number",
+	"actionsArray": [
+		{
+			"id": "number",
+			"type": "number",
+			"quality": "string",
+			"timestamp": "string (date)",
+			"area": "string",
+			"setNumber": "number",
+			"scoreTeamAnalyzed": "number",
+			"scoreTeamOther": "number",
+			"timestampFromStartOfVideo": "number",
+			"reviewVideoActionsArrayIndex": "number",
+			"favorite": "boolean"
+		}
+	],
+	"playerDbObjectsArray": []
 }
 ```
 
 **Functionality:**
+
 - Combines actions from all scripts in session
 - Calculates video timestamps using sync data
 - Sorts actions by video timeline position
@@ -737,26 +796,29 @@ Gets all actions for a session with video synchronization data for review.
 Gets all sessions for a specific team.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "sessionsArray": [
-    {
-      "id": "number",
-      "teamId": "number", 
-      "sessionDate": "string (date)",
-      "city": "string",
-      "sessionName": "string",
-      "sessionDateString": "string (formatted)"
-    }
-  ]
+	"result": true,
+	"sessionsArray": [
+		{
+			"id": "number",
+			"teamId": "number",
+			"sessionDate": "string (date)",
+			"city": "string",
+			"sessionName": "string",
+			"sessionDateString": "string (formatted)"
+		}
+	]
 }
 ```
 
 **Functionality:**
+
 - Formats session dates for display
 - Returns sessions in chronological order
 
@@ -765,28 +827,30 @@ Gets all sessions for a specific team.
 Creates a new training session or match.
 
 **Request Body:**
+
 ```json
 {
-  "teamId": "number (required)",
-  "sessionDate": "string (date, required)",
-  "contractLeagueTeamId": "number",
-  "sessionName": "string",
-  "sessionCity": "string"
+	"teamId": "number (required)",
+	"sessionDate": "string (date, required)",
+	"contractLeagueTeamId": "number",
+	"sessionName": "string",
+	"sessionCity": "string"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "sessionNew": {
-    "id": "number",
-    "teamId": "number",
-    "sessionDate": "string",
-    "city": "string", 
-    "sessionName": "string",
-    "sessionDateString": "string (formatted)"
-  }
+	"result": true,
+	"sessionNew": {
+		"id": "number",
+		"teamId": "number",
+		"sessionDate": "string",
+		"city": "string",
+		"sessionName": "string",
+		"sessionDateString": "string (formatted)"
+	}
 }
 ```
 
@@ -795,13 +859,15 @@ Creates a new training session or match.
 Gets basic action data for video synchronization.
 
 **Parameters:**
+
 - `sessionId`: ID of the session
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "actionsArray": []
+	"result": true,
+	"actionsArray": []
 }
 ```
 
@@ -810,21 +876,23 @@ Gets basic action data for video synchronization.
 Gets detailed action data with synchronization information for script-based video sync.
 
 **Parameters:**
+
 - `sessionId`: ID of the session
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "sessionId": "number",
-  "actionsArrayByScript": [
-    {
-      "scriptId": "number",
-      "actionsArray": [],
-      "deltaTimeInSecondsIsSameForAllActions": "boolean",
-      "deltaTimeInSeconds": "number"
-    }
-  ]
+	"result": true,
+	"sessionId": "number",
+	"actionsArrayByScript": [
+		{
+			"scriptId": "number",
+			"actionsArray": [],
+			"deltaTimeInSecondsIsSameForAllActions": "boolean",
+			"deltaTimeInSeconds": "number"
+		}
+	]
 }
 ```
 
@@ -839,26 +907,27 @@ Video upload, processing, and montage management.
 Gets all videos in the system with session data.
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "videosArray": [
-    {
-      "id": "number",
-      "sessionId": "number",
-      "filename": "string",
-      "url": "string",
-      "videoFileSizeInMb": "number",
-      "processingCompleted": "boolean",
-      "processingFailed": "boolean",
-      "youTubeVideoId": "string",
-      "session": {
-        "id": "number",
-        "sessionDate": "string",
-        "sessionName": "string"
-      }
-    }
-  ]
+	"result": true,
+	"videosArray": [
+		{
+			"id": "number",
+			"sessionId": "number",
+			"filename": "string",
+			"url": "string",
+			"videoFileSizeInMb": "number",
+			"processingCompleted": "boolean",
+			"processingFailed": "boolean",
+			"youTubeVideoId": "string",
+			"session": {
+				"id": "number",
+				"sessionDate": "string",
+				"sessionName": "string"
+			}
+		}
+	]
 }
 ```
 
@@ -867,6 +936,7 @@ Gets all videos in the system with session data.
 Gets all videos for a specific team.
 
 **Parameters:**
+
 - `teamId`: ID of the team
 
 **Response:** Same format as GET /videos/ but filtered by team
@@ -878,14 +948,16 @@ Uploads a video file and initiates YouTube processing.
 **Request:** Multipart form with `video` file and `sessionId` field
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "All good."
+	"result": true,
+	"message": "All good."
 }
 ```
 
 **Functionality:**
+
 - Validates user permissions for session
 - Creates video database record
 - Renames file with standardized naming convention
@@ -897,12 +969,14 @@ Uploads a video file and initiates YouTube processing.
 Deletes a video and removes it from YouTube.
 
 **Parameters:**
+
 - `videoId`: ID of the video to delete
 
 **Response:**
+
 ```json
 {
-  "message": "Video deleted successfully"
+	"message": "Video deleted successfully"
 }
 ```
 
@@ -911,20 +985,22 @@ Deletes a video and removes it from YouTube.
 Queues a video montage creation job.
 
 **Request Body:**
+
 ```json
 {
-  "videoId": "number (required)",
-  "actionsArray": [],
-  "token": "string"
+	"videoId": "number (required)",
+	"actionsArray": [],
+	"token": "string"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "Job queued successfully",
-  "data": {}
+	"result": true,
+	"message": "Job queued successfully",
+	"data": {}
 }
 ```
 
@@ -933,13 +1009,15 @@ Queues a video montage creation job.
 Notifies user when video montage is complete.
 
 **Request Body:**
+
 ```json
 {
-  "filename": "string (required)"
+	"filename": "string (required)"
 }
 ```
 
 **Functionality:**
+
 - Sends email notification to user
 - Includes tokenized download link
 
@@ -948,6 +1026,7 @@ Notifies user when video montage is complete.
 Streams a completed video montage for viewing.
 
 **Parameters:**
+
 - `tokenizedMontageFilename`: JWT token containing filename
 
 **Response:** Video file stream
@@ -957,6 +1036,7 @@ Streams a completed video montage for viewing.
 Downloads a completed video montage.
 
 **Parameters:**
+
 - `tokenizedMontageFilename`: JWT token containing filename
 
 **Response:** Video file as attachment
@@ -978,36 +1058,39 @@ Live scripting and action data management.
 Receives and processes actions from live scripting sessions.
 
 **Request Body:**
+
 ```json
 {
-  "actionsArray": [
-    {
-      "timestamp": "string (ISO date, required)",
-      "type": "number",
-      "quality": "string",
-      "zone": "string", 
-      "setNumber": "number",
-      "scoreTeamAnalyzed": "number",
-      "scoreTeamOther": "number",
-      "playerId": "number",
-      "favorite": "boolean"
-    }
-  ],
-  "sessionId": "number (required)"
+	"actionsArray": [
+		{
+			"timestamp": "string (ISO date, required)",
+			"type": "number",
+			"quality": "string",
+			"area": "string",
+			"setNumber": "number",
+			"scoreTeamAnalyzed": "number",
+			"scoreTeamOther": "number",
+			"playerId": "number",
+			"favorite": "boolean"
+		}
+	],
+	"sessionId": "number (required)"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "result": true,
-  "message": "Actions for scriptId: {id}",
-  "scriptId": "number",
-  "actionsCount": "number"
+	"result": true,
+	"message": "Actions for scriptId: {id}",
+	"scriptId": "number",
+	"actionsCount": "number"
 }
 ```
 
 **Functionality:**
+
 - Creates new script with earliest action timestamp as reference
 - Sorts actions by timestamp
 - Creates action records with database transactions
@@ -1021,43 +1104,48 @@ Receives and processes actions from live scripting sessions.
 All endpoints may return these common error responses:
 
 ### 400 Bad Request
+
 ```json
 {
-  "result": false,
-  "error": "Invalid request parameters"
+	"result": false,
+	"error": "Invalid request parameters"
 }
 ```
 
-### 401 Unauthorized  
+### 401 Unauthorized
+
 ```json
 {
-  "result": false,
-  "message": "Invalid token"
+	"result": false,
+	"message": "Invalid token"
 }
 ```
 
 ### 403 Forbidden
+
 ```json
 {
-  "result": false, 
-  "message": "Insufficient privileges"
+	"result": false,
+	"message": "Insufficient privileges"
 }
 ```
 
 ### 404 Not Found
+
 ```json
 {
-  "result": false,
-  "message": "Resource not found"
+	"result": false,
+	"message": "Resource not found"
 }
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
-  "result": false,
-  "message": "Internal server error",
-  "error": "Detailed error message"
+	"result": false,
+	"message": "Internal server error",
+	"error": "Detailed error message"
 }
 ```
 
@@ -1068,14 +1156,15 @@ All endpoints may return these common error responses:
 This API interacts with the KyberVision20Db SQLite database. For detailed information about table structures, relationships, and data types, refer to `docs/DATABASE_SCHEMA_OVERVIEW.md`.
 
 ### Key Entity Relationships:
-- **Users ” Teams**: Many-to-many through `contractTeamUser`
-- **Players ” Teams**: Many-to-many through `contractTeamPlayer`  
-- **Players ” Users**: One-to-one through `contractPlayerUser`
-- **Sessions** ’ **Videos**: One-to-many
-- **Sessions** ’ **Scripts**: One-to-many
-- **Scripts** ’ **Actions**: One-to-many
-- **Actions ” Videos**: Many-to-many through `contractVideoAction`
-- **Users ” Actions**: Many-to-many through `contractUserAction`
+
+- **Users ï¿½ Teams**: Many-to-many through `contractTeamUser`
+- **Players ï¿½ Teams**: Many-to-many through `contractTeamPlayer`
+- **Players ï¿½ Users**: One-to-one through `contractPlayerUser`
+- **Sessions** ï¿½ **Videos**: One-to-many
+- **Sessions** ï¿½ **Scripts**: One-to-many
+- **Scripts** ï¿½ **Actions**: One-to-many
+- **Actions ï¿½ Videos**: Many-to-many through `contractVideoAction`
+- **Users ï¿½ Actions**: Many-to-many through `contractUserAction`
 
 ---
 
