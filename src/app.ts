@@ -1,4 +1,3 @@
-
 // app.ts — KyberVision20API
 import dotenv from "dotenv";
 dotenv.config();
@@ -13,10 +12,10 @@ import cors from "cors";
 import { initModels, sequelize } from "kybervision20db";
 
 // Import onStartUp functions
-import { 
-  verifyCheckDirectoryExists,
-  onStartUpCreateEnvUsers,
-  onStartUpCreateLeague 
+import {
+	verifyCheckDirectoryExists,
+	onStartUpCreateEnvUsers,
+	onStartUpCreateLeague,
 } from "./modules/onStartUp";
 
 // Routers (keep whatever you already have)
@@ -34,7 +33,6 @@ import leaguesRouter from "./routes/leagues";
 import scriptsRouter from "./routes/scripts";
 import videosRouter from "./routes/videos";
 
-
 // Verify and create necessary directories first
 verifyCheckDirectoryExists();
 
@@ -43,10 +41,10 @@ const port = process.env.PORT || 3000;
 
 // CORS configuration
 app.use(
-  cors({
-    credentials: true,
-    exposedHeaders: ["Content-Disposition"], // <-- this line is key
-  })
+	cors({
+		credentials: true,
+		exposedHeaders: ["Content-Disposition"], // <-- this line is key
+	})
 );
 
 // Middleware configuration
@@ -77,21 +75,21 @@ app.use(express.urlencoded({ limit: "6gb", extended: true }));
 
 // Initialize database and startup functions
 async function initializeApp() {
-  try {
-    // Initialize and sync DB
-    initModels();
-    await sequelize.sync(); // or { alter: true } while iterating
-    console.log("✅ Database connected & synced");
+	try {
+		// Initialize and sync DB
+		initModels();
+		await sequelize.sync(); // or { alter: true } while iterating
+		console.log("✅ Database connected & synced");
 
-    // Run startup functions after database is ready
-    await onStartUpCreateEnvUsers();
-    await onStartUpCreateLeague();
-    
-    console.log("✅ App initialization completed");
-  } catch (err) {
-    console.error("❌ App initialization failed:", err);
-    process.exit(1);
-  }
+		// Run startup functions after database is ready
+		await onStartUpCreateEnvUsers();
+		await onStartUpCreateLeague();
+
+		console.log("✅ App initialization completed");
+	} catch (err) {
+		console.error("❌ App initialization failed:", err);
+		process.exit(1);
+	}
 }
 
 // Initialize the app when this module is imported
@@ -99,9 +97,9 @@ initializeApp();
 
 // Start server if this file is run directly (for development)
 if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`✅ Development server running on http://localhost:${port}`);
-  });
+	app.listen(port, () => {
+		console.log(`✅ Development server running on http://localhost:${port}`);
+	});
 }
 
 // Export the app for server.ts to use
