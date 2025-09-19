@@ -35,3 +35,84 @@ PATH_TEST_REQUEST_ARGS=/Users/nickrodriguez/Documents/project_resources/KyberVis
 NODE_ENV=production
 AUTHENTIFICATION_TURNED_OFF=false
 ```
+
+## Folder Structure
+
+```
+.
+├── CLAUDE.md
+├── dist
+│   ├── app.js
+│   ├── modules
+│   │   ├── adminDb.js
+│   │   ├── common.js
+│   │   ├── contractVideoAction.js
+│   │   ├── mailer.js
+│   │   ├── onStartUp.js
+│   │   ├── players.js
+│   │   ├── sessions.js
+│   │   ├── userAuthentication.js
+│   │   └── videos.js
+│   ├── routes
+│   │   ├── adminDb.js
+│   │   ├── contractPlayerUsers.js
+│   │   ├── contractTeamUsers.js
+│   │   ├── contractUserActions.js
+│   │   ├── contractVideoActions.js
+│   │   ├── index.js
+│   │   ├── leagues.js
+│   │   ├── players.js
+│   │   ├── scripts.js
+│   │   ├── sessions.js
+│   │   ├── teams.js
+│   │   ├── users.js
+│   │   └── videos.js
+│   └── server.js
+├── docs
+│   ├── API_REFERENCE.md
+│   ├── DATABASE_SCHEMA_OVERVIEW.md
+│   ├── images
+│   │   └── kyberVisionLogo01.png
+│   ├── KyberVision18ApiReference
+│   │   ├── app.js
+│   │   ├── modules
+│   │   └── routes
+│   └── TS_CONVERSION_STATUS.md
+├── package-lock.json
+├── package.json
+├── README.md
+├── src
+│   ├── app.ts
+│   ├── modules
+│   │   ├── adminDb.ts
+│   │   ├── common.ts
+│   │   ├── contractVideoAction.ts
+│   │   ├── mailer.ts
+│   │   ├── onStartUp.ts
+│   │   ├── players.ts
+│   │   ├── sessions.ts
+│   │   ├── userAuthentication.ts
+│   │   └── videos.ts
+│   ├── public
+│   ├── routes
+│   │   ├── adminDb.ts
+│   │   ├── contractPlayerUsers.ts
+│   │   ├── contractTeamUsers.ts
+│   │   ├── contractUserActions.ts
+│   │   ├── contractVideoActions.ts
+│   │   ├── index.ts
+│   │   ├── leagues.ts
+│   │   ├── players.ts
+│   │   ├── scripts.ts
+│   │   ├── sessions.ts
+│   │   ├── teams.ts
+│   │   ├── users.ts
+│   │   └── videos.ts
+│   ├── server.ts
+│   └── templates
+│       ├── registrationConfirmationEmail.html
+│       ├── requestToRegisterEmail.html
+│       ├── resetPasswordLinkEmail.html
+│       └── videoMontageCompleteNotificationEmail.html
+└── tsconfig.json
+```
