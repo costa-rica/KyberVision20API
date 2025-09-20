@@ -52,13 +52,19 @@ export const sendResetPasswordEmail = async (
 		const templatePath = path.join(
 			"./src/templates/resetPasswordLinkEmail.html"
 		);
+		console.log("[ sendResetPasswordEmail 1]templatePath:", templatePath);
 
 		let emailTemplate = fs.readFileSync(templatePath, "utf8");
 		const resetLink = `${process.env.URL_KV_MANAGER_WEBSITE}/forgot-password/reset/${token}`;
 		const urlLogo = `${process.env.URL_BASE_KV_API}/images/KyberV2Shiny.png`;
 
+		console.log("[ sendResetPasswordEmail 2]resetLink:", resetLink);
+		console.log("[ sendResetPasswordEmail 2]urlLogo:", urlLogo);
+
 		emailTemplate = emailTemplate.replace("{{resetLink}}", resetLink);
 		emailTemplate = emailTemplate.replace("{{urlLogo}}", urlLogo);
+
+		console.log("[ sendResetPasswordEmail 3]emailTemplate:");
 
 		const mailOptions = {
 			from: process.env.ADMIN_EMAIL_ADDRESS,
