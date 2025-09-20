@@ -128,7 +128,7 @@ router.post(
 			expiresIn: "1h",
 		});
 
-		console.log("[ POST /users/request-reset-password-email 1]token:", token);
+		// console.log("[ POST /users/request-reset-password-email 1]token:", token);
 
 		await sendResetPasswordEmail(email, token)
 			.then(() => console.log("Email sent successfully"))
