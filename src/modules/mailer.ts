@@ -18,8 +18,12 @@ export const sendRegistrationEmail = async (
 	username: string
 ): Promise<any> => {
 	try {
+		// const templatePath = path.join(
+		// 	"./src/templates/registrationConfirmationEmail.html"
+		// );
 		const templatePath = path.join(
-			"./src/templates/registrationConfirmationEmail.html"
+			__dirname,
+			"../templates/registrationConfirmationEmail.html"
 		);
 
 		let emailTemplate = fs.readFileSync(templatePath, "utf8");
@@ -48,19 +52,22 @@ export const sendResetPasswordEmail = async (
 	toEmail: string,
 	token: string
 ): Promise<any> => {
+	// const templatePath = path.join(
+	// 	"./src/templates/resetPasswordLinkEmail.html"
+	// );
+	const templatePath = path.join(
+		__dirname,
+		"../templates/resetPasswordLinkEmail.html"
+	);
+	console.log("[ sendResetPasswordEmail 1]templatePath:", templatePath);
+
+	let emailTemplate = fs.readFileSync(templatePath, "utf8");
+	const resetLink = `${process.env.URL_KV_MANAGER_WEBSITE}/forgot-password/reset/${token}`;
+	const urlLogo = `${process.env.URL_BASE_KV_API}/images/KyberV2Shiny.png`;
+
+	console.log("[ sendResetPasswordEmail 2]resetLink:", resetLink);
+	console.log("[ sendResetPasswordEmail 2]urlLogo:", urlLogo);
 	try {
-		const templatePath = path.join(
-			"./src/templates/resetPasswordLinkEmail.html"
-		);
-		console.log("[ sendResetPasswordEmail 1]templatePath:", templatePath);
-
-		let emailTemplate = fs.readFileSync(templatePath, "utf8");
-		const resetLink = `${process.env.URL_KV_MANAGER_WEBSITE}/forgot-password/reset/${token}`;
-		const urlLogo = `${process.env.URL_BASE_KV_API}/images/KyberV2Shiny.png`;
-
-		console.log("[ sendResetPasswordEmail 2]resetLink:", resetLink);
-		console.log("[ sendResetPasswordEmail 2]urlLogo:", urlLogo);
-
 		emailTemplate = emailTemplate.replace("{{resetLink}}", resetLink);
 		emailTemplate = emailTemplate.replace("{{urlLogo}}", urlLogo);
 
