@@ -7,6 +7,8 @@ import {
 	sendResetPasswordEmail,
 } from "../modules/mailer";
 import { authenticateToken } from "../modules/userAuthentication";
+import { deleteVideoFromYouTube, deleteVideo } from "../modules/videos";
+import { Video } from "kybervision20db";
 
 // Import from the KyberVision20Db package
 import { User, ContractTeamUser, PendingInvitations } from "kybervision20db";
@@ -158,6 +160,34 @@ router.post(
 		await user.update({ password: hashedPassword });
 
 		res.status(200).json({ message: "Password reset successfully" });
+	}
+);
+
+// DELETE /users/delete-account
+router.delete(
+	"/delete-account",
+
+	async (req: Request, res: Response) => {
+		const { email, password } = req.body;
+
+		if (!email || !password) {
+			return res
+				.status(400)
+				.json({ error: "Email and password are required." });
+		}
+
+		const user = await User.findOne({ where: { email } });
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+		if (!isPasswordValid) {
+			return res.status(401).json({ error: "Invalid password." });
+		}
+		await user.destroy();
+		res.status(200).json({ message: "Account deleted successfully" });
 	}
 );
 
