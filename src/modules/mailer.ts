@@ -39,7 +39,7 @@ export const sendRegistrationEmail = async (
 		console.log("Email sent:", info.response);
 		return info;
 	} catch (error) {
-		console.error("Error sending email:", error);
+		console.error("Error sending email [sendRegistrationEmail]:", error);
 		throw error;
 	}
 };
@@ -71,7 +71,7 @@ export const sendResetPasswordEmail = async (
 		console.log("Email sent:", info.response);
 		return info;
 	} catch (error) {
-		console.error("Error sending email:", error);
+		console.error("Error sending email [sendResetPasswordEmail]:", error);
 		throw error;
 	}
 };
@@ -113,7 +113,10 @@ export const sendVideoMontageCompleteNotificationEmail = async (
 		console.log("✅ Email sent:", info.response);
 		return info;
 	} catch (error) {
-		console.error("❌ Error sending email:", error);
+		console.error(
+			"❌ Error sending email [sendVideoMontageCompleteNotificationEmail]:",
+			error
+		);
 		throw error;
 	}
 };
@@ -147,7 +150,10 @@ export const sendJoinSquadNotificationEmail = async (
 		console.log("✅ Email sent:", info.response);
 		return info;
 	} catch (error) {
-		console.error("❌ Error sending email:", error);
+		console.error(
+			"❌ Error sending email [sendJoinSquadNotificationEmail]:",
+			error
+		);
 		throw error;
 	}
 };
