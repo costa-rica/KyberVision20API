@@ -91,6 +91,13 @@ router.post("/login", async (req: Request, res: Response) => {
 	if (!user) {
 		return res.status(404).json({ error: "User not found." });
 	}
+	if (!user.password) {
+		return res
+			.status(401)
+			.json({
+				error: "User missing password. Probably registered via Google.",
+			});
+	}
 
 	const isPasswordValid = await bcrypt.compare(password, user.password);
 	if (!isPasswordValid) {
@@ -181,6 +188,13 @@ router.delete(
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
 		}
+		if (!user.password) {
+			return res
+				.status(401)
+				.json({
+					error: "User missing password. Probably registered via Google.",
+				});
+		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.password);
 		if (!isPasswordValid) {
@@ -188,6 +202,104 @@ router.delete(
 		}
 		await user.destroy();
 		res.status(200).json({ message: "Account deleted successfully" });
+	}
+);
+
+// POST /users/register-or-login-via-google
+router.post(
+	"/register-or-login-via-google",
+	async (req: Request, res: Response) => {
+		try {
+			const { email, name } = req.body as { email?: string; name?: string };
+
+			if (!email) {
+				return res.status(400).json({ error: "Email is required." });
+			}
+
+			// Derive a safe username from email local-part
+			const username = email.split("@")[0];
+
+			// Derive firstName / lastName from provided name (fallbacks included)
+			const safeName = (name ?? username).trim();
+			let firstName = "";
+			let lastName = "";
+
+			if (safeName.length > 0) {
+				const idx = safeName.indexOf(" ");
+				if (idx === -1) {
+					firstName = safeName;
+					lastName = "";
+				} else {
+					firstName = safeName.slice(0, idx).trim();
+					lastName = safeName.slice(idx + 1).trim();
+				}
+			}
+
+			// 1) Try to find existing user
+			let user = await User.findOne({
+				where: { email },
+				include: [ContractTeamUser],
+			});
+
+			if (!user) {
+				// 2) Create user WITHOUT storing a password
+				// If your User model requires a non-null password, consider allowing NULL in the schema
+				// or storing a sentinel value like "" (but you said not to store a password, so we try null).
+				user = await User.create({
+					email,
+					username,
+					firstName,
+					lastName,
+					password: null, // make sure your DB column allows NULL
+				});
+
+				// Process any pending invitations for this email (same behavior as /register)
+				const pendingInvitationArray = await PendingInvitations.findAll({
+					where: { email },
+				});
+
+				if (pendingInvitationArray.length > 0) {
+					await Promise.all(
+						pendingInvitationArray.map(async (pendingInvitation) => {
+							await ContractTeamUser.create({
+								teamId: pendingInvitation.teamId,
+								userId: user!.id,
+							});
+							await pendingInvitation.destroy();
+						})
+					);
+				}
+
+				// Re-fetch including relations for a consistent response shape
+				user = await User.findOne({
+					where: { id: user.id },
+					include: [ContractTeamUser],
+				});
+			} else {
+				// Keep behavior consistent with /login: touch updatedAt
+				await user.save();
+			}
+
+			if (!user) {
+				return res.status(500).json({ error: "User fetch failed." });
+			}
+
+			const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
+
+			// Remove password from response
+			const { password: _ignored, ...userWithoutPassword } = user.toJSON();
+
+			return res.status(200).json({
+				message: "Successfully logged in",
+				token,
+				user: userWithoutPassword,
+			});
+		} catch (err: any) {
+			console.error("Google register/login error:", err);
+			return res
+				.status(500)
+				.json({ error: err?.message || "Internal server error" });
+		}
 	}
 );
 
