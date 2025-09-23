@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { Action, Script, ContractUserAction, sequelize } from "kybervision20db";
 import { authenticateToken } from "../modules/userAuthentication";
+import { recordPing } from "../modules/common";
 
 const router = express.Router();
 
@@ -42,7 +43,24 @@ router.post(
 			let {
 				actionsArray,
 				sessionId,
-			}: { actionsArray: ActionData[]; sessionId: number } = req.body;
+				userDeviceTimestamp,
+			}: {
+				actionsArray: ActionData[];
+				sessionId: number;
+				userDeviceTimestamp: string;
+			} = req.body;
+
+			if (userDeviceTimestamp) {
+				// console.log("🚨 Recording ping");
+				const ping = await recordPing({
+					userId: user.id,
+					serverTimestamp: new Date(),
+					endpointName:
+						"POST /scripts/scripting-live-screen/receive-actions-array",
+					userDeviceTimestamp: new Date(userDeviceTimestamp),
+				});
+				// console.log(ping);
+			}
 
 			// Validate input data
 			if (

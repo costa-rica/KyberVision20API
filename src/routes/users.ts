@@ -9,6 +9,7 @@ import {
 import { authenticateToken } from "../modules/userAuthentication";
 import { deleteVideoFromYouTube, deleteVideo } from "../modules/videos";
 import { Video } from "kybervision20db";
+import { recordPing } from "../modules/common";
 
 // Import from the KyberVision20Db package
 import { User, ContractTeamUser, PendingInvitations } from "kybervision20db";
@@ -78,7 +79,8 @@ router.post("/register", async (req: Request, res: Response) => {
 
 // POST /users/login
 router.post("/login", async (req: Request, res: Response) => {
-	const { email, password } = req.body;
+	const { email, password, userDeviceTimestamp } = req.body;
+	console.log("userDeviceTimestamp: ", userDeviceTimestamp);
 
 	if (!email || !password) {
 		return res.status(400).json({ error: "Email and password are required." });
@@ -92,11 +94,19 @@ router.post("/login", async (req: Request, res: Response) => {
 		return res.status(404).json({ error: "User not found." });
 	}
 	if (!user.password) {
-		return res
-			.status(401)
-			.json({
-				error: "User missing password. Probably registered via Google.",
-			});
+		return res.status(401).json({
+			error: "User missing password. Probably registered via Google.",
+		});
+	}
+	if (userDeviceTimestamp) {
+		// console.log("🚨 Recording ping");
+		const ping = await recordPing({
+			userId: user.id,
+			serverTimestamp: new Date(),
+			endpointName: "POST /users/login",
+			userDeviceTimestamp: new Date(userDeviceTimestamp),
+		});
+		// console.log(ping);
 	}
 
 	const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -189,11 +199,9 @@ router.delete(
 			return res.status(404).json({ error: "User not found." });
 		}
 		if (!user.password) {
-			return res
-				.status(401)
-				.json({
-					error: "User missing password. Probably registered via Google.",
-				});
+			return res.status(401).json({
+				error: "User missing password. Probably registered via Google.",
+			});
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -209,6 +217,7 @@ router.delete(
 router.post(
 	"/register-or-login-via-google",
 	async (req: Request, res: Response) => {
+		console.log("--- POST /users/register-or-login-via-google 1 ----");
 		try {
 			const { email, name } = req.body as { email?: string; name?: string };
 
